@@ -1,5 +1,5 @@
 node_modules/
-visits.json
+stats.json
 package-lock.json
 .system_generated/
 .gemini/

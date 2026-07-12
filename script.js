@@ -118,23 +118,38 @@ document.querySelectorAll('.mobile-link').forEach(link => {
 // ========== TYPEWRITER ==========
 const typewriterEl = document.getElementById('typewriter');
 const phrases = [
-  'Full Stack Developer 💻',
-  'AI Explorer & Builder 🤖',
-  'Cyber Security Explorer 🔐',
-  'IT Support Specialist 🛠️',
-  'MERN Stack Enthusiast 🚀',
-  'MBA Candidate 📚'
+  { text: 'Full Stack Developer', icon: 'laptop' },
+  { text: 'AI Explorer & Builder', icon: 'bot' },
+  { text: 'Cyber Security Explorer', icon: 'shield' },
+  { text: 'IT Support Specialist', icon: 'wrench' },
+  { text: 'MERN Stack Enthusiast', icon: 'rocket' },
+  { text: 'MBA Candidate', icon: 'book-open' }
 ];
 let phraseIdx = 0, charIdx = 0, isDeleting = false;
 
 function typewriter() {
   const current = phrases[phraseIdx];
-  typewriterEl.textContent = current.substring(0, charIdx);
+  const typedText = current.text.substring(0, charIdx);
 
-  if (!isDeleting && charIdx < current.length) {
+  let iconHtml = '';
+  if (current.icon) {
+    iconHtml = ` <i data-lucide="${current.icon}" class="typewriter-icon" style="display: inline-block; width: 1.15rem; height: 1.15rem; vertical-align: -0.15rem; stroke-width: 2px; color: var(--accent);"></i>`;
+  }
+
+  typewriterEl.innerHTML = typedText + (charIdx === current.text.length ? iconHtml : '');
+
+  if (charIdx === current.text.length && window.lucide) {
+    lucide.createIcons({
+      attrs: {
+        class: 'typewriter-icon'
+      }
+    });
+  }
+
+  if (!isDeleting && charIdx < current.text.length) {
     charIdx++;
     setTimeout(typewriter, 60 + Math.random() * 40);
-  } else if (!isDeleting && charIdx === current.length) {
+  } else if (!isDeleting && charIdx === current.text.length) {
     setTimeout(() => { isDeleting = true; typewriter(); }, 2000);
   } else if (isDeleting && charIdx > 0) {
     charIdx--;
@@ -295,16 +310,16 @@ function playTone(freq, type, duration, volume = 0.05) {
     }
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    
+
     osc.type = type; // sine, square, sawtooth, triangle
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    
+
     gain.gain.setValueAtTime(volume, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
-    
+
     osc.connect(gain);
     gain.connect(ctx.destination);
-    
+
     osc.start();
     osc.stop(ctx.currentTime + duration);
   } catch (e) {
@@ -371,17 +386,19 @@ async function fetchVisitorDetails() {
       const battery = await navigator.getBattery();
       details.battery = `${Math.round(battery.level * 100)}% (${battery.charging ? 'Charging' : 'Discharging'})`;
     }
-  } catch (e) {}
+  } catch (e) { }
 
   try {
-    const response = await fetch('https://ipapi.co/json/');
+    const response = await fetch('https://ipwho.is/');
     if (response.ok) {
       const data = await response.json();
-      details.ip = data.ip || details.ip;
-      details.country = data.country_name || details.country;
-      details.region = data.region || details.region;
-      details.city = data.city || details.city;
-      details.isp = data.org || details.isp;
+      if (data.success) {
+        details.ip = data.ip || details.ip;
+        details.country = data.country || details.country;
+        details.region = data.region || details.region;
+        details.city = data.city || details.city;
+        details.isp = data.connection?.isp || data.connection?.org || details.isp;
+      }
     }
   } catch (err) {
     console.warn('Geolocation lookup failed, proceeding with local browser metadata.');
@@ -458,7 +475,7 @@ const commands = {
 <span style="color:#7b61ff">Timezone</span>: ${Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'}
 <span style="color:#7b61ff">Aesthetic</span>: Hacker Cyberpunk v2.0
 `;
-    writeToTerminal(`<div style="display:flex; gap: 20px; overflow-x: auto;">${asciiArt}<div>${details}</div></div>`);
+    writeToTerminal(`<div class="neofetch-container"><div>${asciiArt}</div><div>${details}</div></div>`);
   },
   about: () => {
     scrollToSection('about');
@@ -483,14 +500,28 @@ const commands = {
   hack: async () => {
     writeToTerminal('[*] Executing deep diagnostic audit scan...', 'warning');
     sfx.alarm();
-    
+
     const hud = document.getElementById('cyber-hud');
-    if (hud && hud.classList.contains('minimized')) {
+    const trigger = document.getElementById('cyber-hud-trigger');
+    if (hud) {
       hud.classList.remove('minimized');
+      hud.classList.remove('hidden');
     }
-    
+    if (trigger) {
+      trigger.classList.remove('visible');
+    }
+
     let visitorData = await fetchVisitorDetails();
-    
+
+    let uniqueHits = 1;
+    try {
+      const statsRes = await fetch('/api/stats');
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        uniqueHits = statsData.totalUnique;
+      }
+    } catch (e) { }
+
     let steps = [
       `[*] Ping diagnostics resolved... OK.`,
       `[+] Detected Node IP: <span style="color:#ff6b9d">${visitorData.ip}</span>`,
@@ -500,9 +531,10 @@ const commands = {
       `[+] Frame Resolution: ${visitorData.screen}`,
       `[+] Host Clock: ${new Date().toLocaleTimeString()} (${visitorData.timezone})`,
       `[+] Node Power Status: ${visitorData.battery}`,
+      `[+] Total Unique Targets Exploited: <span style="color:#00d4ff">${uniqueHits}</span>`,
       `[*] DIAGNOSTICS LOGGED SUCCESSFULLY.`
     ];
-    
+
     for (let i = 0; i < steps.length; i++) {
       await new Promise(resolve => setTimeout(resolve, 350));
       writeToTerminal(steps[i], 'success');
@@ -536,20 +568,20 @@ function startHackingGame() {
   gameActive = true;
   attempts = 4;
   clickedBrackets.clear();
-  
+
   terminalContainer.classList.add('hacker-theme');
   terminalTitle.textContent = 'sufyan@portfolio:~/firewall_bypass';
   terminalOutput.innerHTML = '';
-  
+
   writeToTerminal('ROBCO INDUSTRIES (TM) TERMLINK ACTIVE', 'success');
   writeToTerminal('BYPASS SECURITY NODE TO DECRYPT SECRET ARCHIVE.', 'success');
   writeToTerminal('================================================', 'success');
-  
+
   const availableWords = wordPool.filter(w => w.length === 7);
   const shuffled = [...availableWords].sort(() => 0.5 - Math.random());
   gameWordsList = shuffled.slice(0, 8);
   secretWord = gameWordsList[Math.floor(Math.random() * gameWordsList.length)];
-  
+
   renderGameScreen();
 }
 
@@ -557,7 +589,7 @@ function renderGameScreen() {
   let hexStart = 0xF4A0;
   let gameRowsHTML = "";
   const symbols = "$%&*/()[]{}<>@#*!;:,.?";
-  
+
   let stream = "";
   let wordIndex = 0;
   while (wordIndex < gameWordsList.length || stream.length < 240) {
@@ -589,17 +621,17 @@ function renderGameScreen() {
         break;
       }
     }
-    
+
     if (foundWord) {
       tokens.push({ type: 'word', text: foundWord });
       i += foundWord.length;
       continue;
     }
-    
+
     const openBrs = ['[', '{', '<', '('];
     const closeBrs = [']', '}', '>', ')'];
     const brIdx = openBrs.indexOf(stream[i]);
-    
+
     if (brIdx !== -1) {
       const openBr = stream[i];
       const closeBr = closeBrs[brIdx];
@@ -611,7 +643,7 @@ function renderGameScreen() {
         }
         if (openBrs.includes(stream[j])) break;
       }
-      
+
       if (matchIdx !== -1) {
         const bracketText = stream.substring(i, matchIdx + 1);
         tokens.push({ type: 'bracket', text: bracketText, id: `br-${i}` });
@@ -619,7 +651,7 @@ function renderGameScreen() {
         continue;
       }
     }
-    
+
     tokens.push({ type: 'char', text: stream[i] });
     i++;
   }
@@ -627,7 +659,7 @@ function renderGameScreen() {
   let currentOffset = 0;
   let tempRowText = "";
   let tempRowHTML = "";
-  
+
   function flushRow() {
     if (tempRowHTML !== "") {
       const addr = "0x" + (hexStart + currentOffset * 12).toString(16).toUpperCase();
@@ -637,7 +669,7 @@ function renderGameScreen() {
       currentOffset++;
     }
   }
-  
+
   for (let token of tokens) {
     let tokenHTML = "";
     if (token.type === 'word') {
@@ -647,16 +679,16 @@ function renderGameScreen() {
     } else {
       tokenHTML = token.text;
     }
-    
+
     if (tempRowText.length + token.text.length > 14) {
       flushRow();
     }
-    
+
     tempRowText += token.text;
     tempRowHTML += tokenHTML;
   }
   flushRow();
-  
+
   let parsedHTML = `<div class="game-container">`;
   parsedHTML += `<div class="game-col-memory">${gameRowsHTML}</div>`;
   parsedHTML += `<div class="game-col-feedback">`;
@@ -670,10 +702,10 @@ function renderGameScreen() {
   parsedHTML += `<div style="font-size:0.7rem; color:rgba(0, 255, 102, 0.6)">Type "abort" to exit.</div>`;
   parsedHTML += `</div>`;
   parsedHTML += `</div>`;
-  
+
   terminalOutput.innerHTML = parsedHTML;
   scrollToBottom();
-  
+
   document.querySelectorAll('.game-word').forEach(el => {
     el.addEventListener('click', (e) => {
       const word = e.target.dataset.word;
@@ -681,7 +713,7 @@ function renderGameScreen() {
       handleWordGuess(word, e.target);
     });
   });
-  
+
   document.querySelectorAll('.game-bracket').forEach(el => {
     el.addEventListener('click', (e) => {
       const brId = e.currentTarget.dataset.brId;
@@ -698,10 +730,10 @@ function handleWordGuess(word, element) {
     sfx.success();
     logGameFeedback(`> ACCESS GRANTED!`);
     logGameFeedback(`> DECRYPTING NODE...`);
-    
+
     element.style.background = '#00ff66';
     element.style.color = '#050508';
-    
+
     setTimeout(() => {
       terminalContainer.classList.remove('hacker-theme');
       terminalTitle.textContent = 'sufyan@portfolio:~';
@@ -718,20 +750,20 @@ function handleWordGuess(word, element) {
     for (let k = 0; k < word.length; k++) {
       if (word[k] === secretWord[k]) likeness++;
     }
-    
+
     attempts--;
     sfx.fail();
     logGameFeedback(`> GUESS: "${word}"`);
     logGameFeedback(`> LIKENESS = ${likeness}`);
-    
+
     element.textContent = '.'.repeat(word.length);
     element.dataset.word = '.......';
     element.className = 'game-word-dud';
     element.style.color = 'rgba(0, 255, 102, 0.2)';
-    
+
     document.getElementById('game-attempts-count').textContent = attempts;
     document.getElementById('game-attempts-blocks').textContent = "█ ".repeat(attempts);
-    
+
     if (attempts <= 0) {
       sfx.alarm();
       logGameFeedback(`> !!! SECURE LOCKOUT !!!`);
@@ -750,7 +782,7 @@ function handleWordGuess(word, element) {
 function handleBracketClick(brId, text, element) {
   sfx.click();
   element.style.color = 'rgba(0, 255, 102, 0.2)';
-  
+
   if (Math.random() < 0.4) {
     attempts = 4;
     logGameFeedback(`> ATTEMPTS REPLENISHED.`);
@@ -762,14 +794,14 @@ function handleBracketClick(brId, text, element) {
       const targetDud = activeDuds[Math.floor(Math.random() * activeDuds.length)];
       const idx = gameWordsList.indexOf(targetDud);
       gameWordsList[idx] = '.......';
-      
+
       document.querySelectorAll(`.game-word[data-word="${targetDud}"]`).forEach(el => {
         el.textContent = '.'.repeat(targetDud.length);
         el.dataset.word = '.......';
         el.className = 'game-word-dud';
         el.style.color = 'rgba(0, 255, 102, 0.2)';
       });
-      
+
       logGameFeedback(`> REMOVED DUD: "${targetDud}"`);
     } else {
       logGameFeedback(`> STABLE SYNC.`);
@@ -790,7 +822,7 @@ function logGameFeedback(msg) {
 // ========== TERMINAL COMMAND EXECUTION ==========
 function executeCommand(rawCmd) {
   const inputVal = rawCmd.trim().toLowerCase();
-  
+
   if (gameActive) {
     if (inputVal === 'exit' || inputVal === 'abort') {
       gameActive = false;
@@ -803,9 +835,9 @@ function executeCommand(rawCmd) {
     }
     return;
   }
-  
+
   if (inputVal === '') return;
-  
+
   if (commands[inputVal]) {
     commands[inputVal]();
   } else {
@@ -813,10 +845,10 @@ function executeCommand(rawCmd) {
   }
 }
 
-window.runTerminalCmd = function(cmd) {
+window.runTerminalCmd = function (cmd) {
   const el = document.getElementById('skills');
   if (el) el.scrollIntoView({ behavior: 'smooth' });
-  
+
   setTimeout(() => {
     terminalInput.focus();
     writeToTerminal(`<span class="terminal-prompt">${terminalTitle.textContent.split(':')[1] || '~'} $</span> ${cmd}`);
@@ -858,8 +890,22 @@ soundControlBtn.addEventListener('click', () => {
 const hudBody = document.getElementById('cyber-hud-body');
 const hudHeader = document.getElementById('cyber-hud-header');
 const hudToggleBtn = document.getElementById('cyber-hud-toggle-btn');
+const hudCloseBtn = document.getElementById('cyber-hud-close-btn');
 const hudDot = document.getElementById('cyber-hud-status-dot');
 const cyberHud = document.getElementById('cyber-hud');
+const hudTrigger = document.getElementById('cyber-hud-trigger');
+const hudTriggerDot = document.getElementById('cyber-hud-trigger-dot');
+
+function updateHUDLayout() {
+  if (cyberHud.classList.contains('minimized') || cyberHud.classList.contains('hidden')) {
+    cyberHud.classList.add('hidden');
+    cyberHud.classList.remove('minimized');
+    hudTrigger.classList.add('visible');
+  } else {
+    cyberHud.classList.remove('hidden');
+    hudTrigger.classList.remove('visible');
+  }
+}
 
 hudHeader.addEventListener('click', () => {
   cyberHud.classList.toggle('minimized');
@@ -871,7 +917,31 @@ hudHeader.addEventListener('click', () => {
     icon.className = 'fas fa-minus';
     if (hudDot) hudDot.className = 'cyber-hud-dot';
   }
+  updateHUDLayout();
 });
+
+hudCloseBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  cyberHud.classList.add('hidden');
+  cyberHud.classList.remove('minimized');
+  hudTrigger.classList.add('visible');
+  sfx.click();
+});
+
+hudTrigger.addEventListener('click', () => {
+  cyberHud.classList.remove('hidden');
+  cyberHud.classList.remove('minimized');
+  hudTrigger.classList.remove('visible');
+
+  const icon = hudToggleBtn.querySelector('i');
+  if (icon) icon.className = 'fas fa-minus';
+  if (hudDot) hudDot.className = 'cyber-hud-dot';
+
+  if (hudTriggerDot) hudTriggerDot.classList.remove('active');
+  sfx.success();
+});
+
+window.addEventListener('resize', updateHUDLayout);
 
 function writeToHUD(msg, type = '') {
   if (!hudBody) return;
@@ -882,17 +952,14 @@ function writeToHUD(msg, type = '') {
   hudBody.scrollTop = hudBody.scrollHeight;
 }
 
-async function logVisitToBackend(details) {
+// Records an anonymous, aggregate-only visit (total + city count).
+// The server determines location from the connection itself, so no
+// device/browser/battery details need to be sent here anymore.
+async function logVisitToBackend() {
   try {
-    const response = await fetch('/api/visit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(details)
-    });
+    const response = await fetch('/api/visit', { method: 'POST' });
     if (response.ok) {
-      console.log('Visit logged successfully to local backend.');
+      console.log('Visit logged (aggregate stats only).');
     }
   } catch (e) {
     console.log('Express backend log unavailable (running dynamically/statically).');
@@ -902,38 +969,53 @@ async function logVisitToBackend(details) {
 async function runIntrusionScan() {
   writeToHUD('[SYS] TARGET ENGAGED. MONITORING CONSOLE DATA...');
   sfx.click();
-  
+
   const visitorData = await fetchVisitorDetails();
-  logVisitToBackend(visitorData);
-  
+  logVisitToBackend();
+
+  let uniqueHits = 1;
+  try {
+    const statsRes = await fetch('/api/stats');
+    if (statsRes.ok) {
+      const statsData = await statsRes.json();
+      uniqueHits = statsData.totalUnique;
+    }
+  } catch (e) { }
+
   let logLines = [
     { text: `IP: ${visitorData.ip}`, type: 'success' },
     { text: `LOC: ${visitorData.city}, ${visitorData.country}`, type: 'info' },
-    { text: `ISP: ${visitorData.isp}`, type: 'info' },
-    { text: `OS: ${visitorData.os}`, type: 'info' },
-    { text: `NAV: ${visitorData.browser}`, type: 'info' },
-    { text: `RES: ${visitorData.screen}`, type: 'info' },
-    { text: `TIME: ${new Date().toLocaleTimeString()}`, type: 'info' },
-    { text: `BATTERY: ${visitorData.battery}`, type: 'info' },
+    { text: `[SYS] UNIQUE TARGETS EXPOSED: ${uniqueHits}`, type: 'success' },
+    { text: `[SYS] STATUS: COMPROMISED`, type: 'critical' },
     { text: `[SYS] CONSOLE INTRUSION COMPLETED.`, type: 'success' }
   ];
-  
+
   for (let k = 0; k < logLines.length; k++) {
     await new Promise(resolve => setTimeout(resolve, 600));
     writeToHUD(logLines[k].text, logLines[k].type);
     sfx.click();
   }
-  
-  // Append minigame trigger button
+
+  // Append redirect and minigame trigger buttons
   await new Promise(resolve => setTimeout(resolve, 400));
   const btnContainer = document.createElement('div');
   btnContainer.style.marginTop = '8px';
-  btnContainer.innerHTML = `<button class="btn btn-primary btn-full" style="padding: 6px 8px; font-size: 0.72rem; border-radius: var(--radius-sm); font-family: var(--font-mono); width: 100%; border: 1px solid var(--accent); color: var(--accent); background: rgba(0, 212, 255, 0.05); cursor: pointer; transition: 0.2s;" onclick="runTerminalCmd('play')">BYPASS FIREWALL NODE</button>`;
-  
-  const btn = btnContainer.querySelector('button');
-  btn.onmouseover = () => { btn.style.background = 'rgba(0, 212, 255, 0.2)'; btn.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.3)'; };
-  btn.onmouseout = () => { btn.style.background = 'rgba(0, 212, 255, 0.05)'; btn.style.boxShadow = 'none'; };
-  
+  btnContainer.style.display = 'flex';
+  btnContainer.style.flexDirection = 'column';
+  btnContainer.style.gap = '6px';
+  btnContainer.innerHTML = `
+    <a href="info.html" class="btn btn-primary btn-full" style="padding: 6px 8px; font-size: 0.72rem; border-radius: var(--radius-sm); font-family: var(--font-mono); width: 100%; border: 1px solid #ff3b30; color: #ff3b30; background: rgba(255, 59, 48, 0.05); text-align: center; text-decoration: none; cursor: pointer; display: block; transition: 0.2s;">VIEW SECURITY REPORT</a>
+    <button class="btn btn-primary btn-full" style="padding: 6px 8px; font-size: 0.72rem; border-radius: var(--radius-sm); font-family: var(--font-mono); width: 100%; border: 1px solid var(--accent); color: var(--accent); background: rgba(0, 212, 255, 0.05); cursor: pointer; transition: 0.2s;" onclick="runTerminalCmd('play')">BYPASS FIREWALL NODE</button>
+  `;
+
+  const reportBtn = btnContainer.querySelector('a');
+  reportBtn.onmouseover = () => { reportBtn.style.background = 'rgba(255, 59, 48, 0.2)'; reportBtn.style.boxShadow = '0 0 10px rgba(255, 59, 48, 0.3)'; };
+  reportBtn.onmouseout = () => { reportBtn.style.background = 'rgba(255, 59, 48, 0.05)'; reportBtn.style.boxShadow = 'none'; };
+
+  const minigameBtn = btnContainer.querySelector('button');
+  minigameBtn.onmouseover = () => { minigameBtn.style.background = 'rgba(0, 212, 255, 0.2)'; minigameBtn.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.3)'; };
+  minigameBtn.onmouseout = () => { minigameBtn.style.background = 'rgba(0, 212, 255, 0.05)'; minigameBtn.style.boxShadow = 'none'; };
+
   hudBody.appendChild(btnContainer);
   hudBody.scrollTop = hudBody.scrollHeight;
   sfx.beep();
@@ -942,6 +1024,17 @@ async function runIntrusionScan() {
 // Start CLI and HUD scan on window load
 window.addEventListener('load', () => {
   initTerminal();
+
+  // Initialize Lucide icons
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
+  // Hide HUD by default on all devices on initial load
+  cyberHud.classList.add('hidden');
+  cyberHud.classList.remove('minimized');
+  hudTrigger.classList.add('visible');
+  if (hudTriggerDot) hudTriggerDot.classList.add('active');
+
   setTimeout(runIntrusionScan, 800);
 });
-

@@ -33,14 +33,25 @@
         <span class="cyber-hud-dot" id="cyber-hud-status-dot"></span>
         <span>Diagnostic Monitor</span>
       </div>
-      <button class="cyber-hud-toggle-btn" id="cyber-hud-toggle-btn" aria-label="Minimize HUD">
-        <i class="fas fa-minus"></i>
-      </button>
+      <div class="cyber-hud-controls">
+        <button class="cyber-hud-toggle-btn" id="cyber-hud-toggle-btn" aria-label="Minimize HUD">
+          <i class="fas fa-minus"></i>
+        </button>
+        <button class="cyber-hud-close-btn" id="cyber-hud-close-btn" aria-label="Close HUD">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     </div>
     <div class="cyber-hud-body" id="cyber-hud-body">
       <div class="cyber-hud-line info">[SYS] Booting intrusion diagnostics...</div>
     </div>
   </div>
+
+  <!-- Floating Cyber HUD Trigger FAB -->
+  <button class="cyber-hud-trigger" id="cyber-hud-trigger" aria-label="Toggle Diagnostics Monitor" title="Toggle Diagnostics Monitor">
+    <span class="cyber-hud-trigger-icon">&gt;_</span>
+    <span class="cyber-hud-trigger-dot" id="cyber-hud-trigger-dot"></span>
+  </button>
 
   <!-- Retro Sound Control -->
   <button class="cyber-sound-control" id="sound-control" aria-label="Toggle retro sounds" title="Toggle retro sounds">
@@ -58,6 +69,7 @@
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#experience" class="nav-link">Experience</a>
         <a href="#projects" class="nav-link">Projects</a>
+        <a href="info.html" class="nav-link" style="color: var(--accent-3); font-weight: bold;"><i class="fas fa-fingerprint"></i> Spy Report</a>
         <a href="#contact" class="nav-link">Contact</a>
       </div>
       <a href="#contact" class="nav-cta">Let's Talk</a>
@@ -73,6 +85,7 @@
     <a href="#skills" class="mobile-link">Skills</a>
     <a href="#experience" class="mobile-link">Experience</a>
     <a href="#projects" class="mobile-link">Projects</a>
+    <a href="info.html" class="mobile-link" style="color: var(--accent-3);"><i class="fas fa-fingerprint"></i> Spy Report</a>
     <a href="#contact" class="mobile-link">Contact</a>
   </div>
 
@@ -97,13 +110,17 @@
           A curious developer on an exciting journey through the vast universe of code.
           Building cool things with the MERN stack, Python, and automated AI assistance.
         </p>
-        <div class="hero-buttons">
+        <div class="hero-buttons" style="flex-wrap: wrap; gap: 1rem;">
           <a href="#projects" class="btn btn-primary">
             <span>View My Work</span>
             <i class="fas fa-arrow-right"></i>
           </a>
           <a href="#contact" class="btn btn-outline">
             <span>Get in Touch</span>
+          </a>
+          <a href="info.html" class="btn btn-outline" style="border-color: var(--accent-3); color: var(--accent-3); display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-fingerprint"></i>
+            <span>What does the browser know about you?</span>
           </a>
         </div>
         <div class="hero-stats">
@@ -157,7 +174,7 @@
       </div>
       <div class="about-grid">
         <div class="about-card about-main glass-card">
-          <div class="about-emoji">🚀</div>
+          <div class="about-emoji"><i data-lucide="rocket"></i></div>
           <h3>Who Am I?</h3>
           <p>
             I'm a young, energetic, and adaptable developer born and raised in <strong>Saudi Arabia</strong>.
@@ -165,15 +182,15 @@
             I bridge the gap between complex software systems and user operations.
           </p>
           <p>
-            I love to explore **AI technologies**, leveraging LLMs and advanced automation tools to accelerate my development cycles and build robust projects. In my spare time, I dive into **cyber security & hacking labs** to understand system defenses from the ground up.
+            I love to explore <strong>AI technologies</strong>, leveraging LLMs and advanced automation tools to accelerate my development cycles and build robust projects. In my spare time, I dive into <strong>cyber security & hacking labs</strong> to understand system defenses from the ground up.
           </p>
           <p>
-            Currently working as a <strong>Senior Onsite Support Engineer</strong> at Digival IT Solutions in Jeddah,
-            while pursuing my <strong>MBA</strong>. I believe that curiosity is the ultimate developer tool! 🚀🔐
+            Currently working as a <strong>Senior Onsite Support Engineer</strong> at Digival IT Solutions in Jeddah, Saudi Arabia,
+            while pursuing my <strong>MBA</strong>. I believe that curiosity is the ultimate developer tool! <i class="fas fa-rocket" style="color: var(--accent); font-size: 0.9rem;"></i> <i class="fas fa-lock" style="color: var(--accent-3); font-size: 0.9rem;"></i>
           </p>
         </div>
         <div class="about-card glass-card">
-          <div class="about-emoji">🌱</div>
+          <div class="about-emoji"><i data-lucide="sprout"></i></div>
           <h3>Currently Growing</h3>
           <ul class="about-list">
             <li><i class="fas fa-brain"></i> AI Exploration & Leverage</li>
@@ -183,7 +200,7 @@
           </ul>
         </div>
         <div class="about-card glass-card">
-          <div class="about-emoji">🎮</div>
+          <div class="about-emoji"><i data-lucide="gamepad-2"></i></div>
           <h3>Fun Facts</h3>
           <ul class="about-list">
             <li><i class="fas fa-gamepad"></i> Gamer when not coding</li>
@@ -192,7 +209,7 @@
           </ul>
         </div>
         <div class="about-card glass-card">
-          <div class="about-emoji">🎯</div>
+          <div class="about-emoji"><i data-lucide="target"></i></div>
           <h3>Current Mission</h3>
           <ul class="about-list">
             <li><i class="fas fa-rocket"></i> Building cool projects</li>
@@ -536,11 +553,11 @@
         <a href="#hero" class="footer-logo">
           <span class="logo-bracket">&lt;</span>SF<span class="logo-bracket">/&gt;</span>
         </a>
-        <p class="footer-quote">"Automating systems and building cool things, one commit at a time 🚀"</p>
+        <p class="footer-quote">"Automating systems and building cool things, one commit at a time <i data-lucide="rocket" style="display: inline-block; width: 1.1rem; height: 1.1rem; vertical-align: middle; color: var(--accent);"></i>"</p>
       </div>
       <div class="footer-divider"></div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Sufyan Mohammed Farooq. Built with ❤️ and terminal shells</p>
+        <p>&copy; 2026 Sufyan Mohammed Farooq. Built with <i data-lucide="heart" style="display: inline-block; width: 0.95rem; height: 0.95rem; color: #ff3b30; fill: #ff3b30; vertical-align: middle; margin: 0 2px;"></i> and terminal shells</p>
         <div class="footer-links">
           <a href="#about">About</a>
           <a href="#skills">Skills</a>
@@ -551,6 +568,7 @@
     </div>
   </footer>
 
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="script.js"></script>
 </body>
 
