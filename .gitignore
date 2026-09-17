@@ -3,3 +3,5 @@ stats.json
 package-lock.json
 .system_generated/
 .gemini/
+*.exe
+.agent/**/bin/

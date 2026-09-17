@@ -1,7 +1,7 @@
 {
   "name": "sufyan-portfolio",
   "version": "1.0.0",
-  "description": "Interactive Hacker Portfolio Website",
+  "description": "Sufyan Mohammed Farooq - Developer Portfolio & Systems Showcase",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

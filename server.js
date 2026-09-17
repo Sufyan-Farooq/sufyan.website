@@ -126,53 +126,6 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-// Proxy endpoint for Grok AI Profile Analysis
-app.post('/api/proxy-profile', async (req, res) => {
-  try {
-    const clientIp = getClientIp(req);
-    const response = await fetch('https://yourinfo.hsingh.app/api/profile', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-forwarded-for': clientIp
-      },
-      body: JSON.stringify(req.body)
-    });
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[ERROR] Proxy profile API returned status:', response.status, errorText);
-      return res.status(response.status).send(errorText);
-    }
-    const data = await response.json();
-    res.status(200).json(data);
-  } catch (e) {
-    console.error('[ERROR] Failed to proxy profile:', e);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
-  }
-});
-
-// Proxy endpoint for RTB Ad Auction Simulator
-app.post('/api/proxy-auction', async (req, res) => {
-  try {
-    const response = await fetch('https://yourinfo.hsingh.app/api/ai-auction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(req.body)
-    });
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[ERROR] Proxy auction API returned status:', response.status, errorText);
-      return res.status(response.status).send(errorText);
-    }
-    const data = await response.json();
-    res.status(200).json(data);
-  } catch (e) {
-    console.error('[ERROR] Failed to proxy auction:', e);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
-  }
-});
 
 app.listen(PORT, () => {
   console.log('==================================================');

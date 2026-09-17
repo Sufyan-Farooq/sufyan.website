@@ -1,1040 +1,599 @@
-// ========== PARTICLE SYSTEM ==========
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particles = [];
-let mouse = { x: 0, y: 0 };
+/**
+ * SUFYAN FAROOQ — PORTFOLIO ENGINE
+ * Three.js WebGL Interactive 3D Canvas, 3D Bento Tilts, Command Palette (⌘K) & Telemetry
+ */
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+(function () {
+  'use strict';
 
-class Particle {
-  constructor() {
-    this.reset();
-  }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 0.5;
-    this.speedX = (Math.random() - 0.5) * 0.5;
-    this.speedY = (Math.random() - 0.5) * 0.5;
-    this.opacity = Math.random() * 0.5 + 0.1;
-    this.color = ['#00d4ff', '#7b61ff', '#ff6b9d'][Math.floor(Math.random() * 3)];
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.globalAlpha = this.opacity;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-}
-
-function initParticles() {
-  const count = Math.min(80, Math.floor(window.innerWidth * 0.05));
-  particles = [];
-  for (let i = 0; i < count; i++) particles.push(new Particle());
-}
-initParticles();
-
-function drawConnections() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(0, 212, 255, ${0.06 * (1 - dist / 120)})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
+  // ---------- 1. Lucide Icons Initialization ----------
+  function initIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
     }
   }
-}
 
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
-  drawConnections();
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
+  // ---------- 2. Three.js 3D Interactive Background ----------
+  function initThreeJsCanvas() {
+    const canvas = document.getElementById('webgl-canvas');
+    if (!canvas || typeof THREE === 'undefined') return;
 
-// ========== CURSOR GLOW ==========
-const cursorGlow = document.getElementById('cursor-glow');
-document.addEventListener('mousemove', (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-  cursorGlow.style.left = e.clientX + 'px';
-  cursorGlow.style.top = e.clientY + 'px';
-});
-
-// ========== NAVBAR ==========
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section');
-
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 50);
-
-  // Active section highlight
-  let current = '';
-  sections.forEach(s => {
-    const top = s.offsetTop - 100;
-    if (window.scrollY >= top) current = s.getAttribute('id');
-  });
-  navLinks.forEach(link => {
-    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-  });
-});
-
-// ========== MOBILE MENU ==========
-const navToggle = document.getElementById('nav-toggle');
-const mobileMenu = document.getElementById('mobile-menu');
-
-navToggle.addEventListener('click', () => {
-  mobileMenu.classList.toggle('open');
-  document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-});
-document.querySelectorAll('.mobile-link').forEach(link => {
-  link.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
-
-// ========== TYPEWRITER ==========
-const typewriterEl = document.getElementById('typewriter');
-const phrases = [
-  { text: 'Full Stack Developer', icon: 'laptop' },
-  { text: 'AI Explorer & Builder', icon: 'bot' },
-  { text: 'Cyber Security Explorer', icon: 'shield' },
-  { text: 'IT Support Specialist', icon: 'wrench' },
-  { text: 'MERN Stack Enthusiast', icon: 'rocket' },
-  { text: 'MBA Candidate', icon: 'book-open' }
-];
-let phraseIdx = 0, charIdx = 0, isDeleting = false;
-
-function typewriter() {
-  const current = phrases[phraseIdx];
-  const typedText = current.text.substring(0, charIdx);
-
-  let iconHtml = '';
-  if (current.icon) {
-    iconHtml = ` <i data-lucide="${current.icon}" class="typewriter-icon" style="display: inline-block; width: 1.15rem; height: 1.15rem; vertical-align: -0.15rem; stroke-width: 2px; color: var(--accent);"></i>`;
-  }
-
-  typewriterEl.innerHTML = typedText + (charIdx === current.text.length ? iconHtml : '');
-
-  if (charIdx === current.text.length && window.lucide) {
-    lucide.createIcons({
-      attrs: {
-        class: 'typewriter-icon'
-      }
-    });
-  }
-
-  if (!isDeleting && charIdx < current.text.length) {
-    charIdx++;
-    setTimeout(typewriter, 60 + Math.random() * 40);
-  } else if (!isDeleting && charIdx === current.text.length) {
-    setTimeout(() => { isDeleting = true; typewriter(); }, 2000);
-  } else if (isDeleting && charIdx > 0) {
-    charIdx--;
-    setTimeout(typewriter, 30);
-  } else {
-    isDeleting = false;
-    phraseIdx = (phraseIdx + 1) % phrases.length;
-    setTimeout(typewriter, 500);
-  }
-}
-typewriter();
-
-// ========== COUNTER ANIMATION ==========
-function animateCounters() {
-  document.querySelectorAll('.stat-number').forEach(el => {
-    const target = parseInt(el.dataset.target);
-    const duration = 2000;
-    const start = performance.now();
-
-    function update(now) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.floor(target * eased);
-      if (progress < 1) requestAnimationFrame(update);
+    // Check prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      canvas.style.display = 'none';
+      return;
     }
-    requestAnimationFrame(update);
-  });
-}
 
-// ========== SCROLL REVEAL ==========
-const revealEls = document.querySelectorAll(
-  '.about-card, .skill-category, .skills-terminal, .timeline-item, .project-card, .education-card, .contact-card, .contact-form-wrapper'
-);
-revealEls.forEach(el => el.classList.add('reveal'));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 180;
+    camera.position.y = 40;
 
-let countersDone = false;
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-
-      // Trigger counters when hero stats come into view
-      if (!countersDone && entry.target.closest('#hero')) {
-        animateCounters();
-        countersDone = true;
-      }
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    } catch (e) {
+      console.warn('WebGL initialization failed, falling back to static background.', e);
+      return;
     }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-revealEls.forEach(el => observer.observe(el));
+    // Interactive Particle Mesh & Wave
+    const particleCount = window.innerWidth < 768 ? 1200 : 2600;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const initialY = new Float32Array(particleCount);
 
-// Also observe the hero stats
-const heroStats = document.querySelector('.hero-stats');
-if (heroStats) {
-  const statsObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !countersDone) {
-      animateCounters();
-      countersDone = true;
-    }
-  }, { threshold: 0.5 });
-  statsObserver.observe(heroStats);
-}
+    const colorPrimary = new THREE.Color(0x3b82f6);
+    const colorSecondary = new THREE.Color(0x60a5fa);
+    const colorDust = new THREE.Color(0x27272a);
 
-// ========== STAGGERED REVEAL ==========
-document.querySelectorAll('.about-grid, .skills-grid, .projects-grid, .education-grid').forEach(grid => {
-  const children = grid.children;
-  Array.from(children).forEach((child, i) => {
-    child.style.transitionDelay = `${i * 0.1}s`;
-  });
-});
+    const xSpan = 380;
+    const zSpan = 320;
 
-// ========== CONTACT FORM ==========
-document.getElementById('contact-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const btn = form.querySelector('button');
-  const originalHTML = btn.innerHTML;
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3;
+      const x = (Math.random() - 0.5) * xSpan;
+      const z = (Math.random() - 0.5) * zSpan;
+      const y = (Math.sin(x * 0.03) + Math.cos(z * 0.03)) * 14;
 
-  // Disable button to prevent multiple clicks
-  btn.disabled = true;
-  btn.innerHTML = '<span>Sending... <i class="fas fa-spinner fa-spin"></i></span>';
+      positions[i3] = x;
+      positions[i3 + 1] = y;
+      positions[i3 + 2] = z;
+      initialY[i] = y;
 
-  try {
-    const response = await fetch(form.action, {
-      method: form.method,
-      body: new FormData(form),
-      headers: {
-        'Accept': 'application/json'
+      // Color distribution: emerald accent near center, cyan highlights, muted dust on fringe
+      const distFromCenter = Math.sqrt(x * x + z * z) / (xSpan * 0.5);
+      let pColor;
+      const rand = Math.random();
+
+      if (distFromCenter < 0.45 && rand > 0.3) {
+        pColor = colorPrimary;
+      } else if (distFromCenter < 0.75 && rand > 0.6) {
+        pColor = colorSecondary;
+      } else {
+        pColor = colorDust;
       }
+
+      colors[i3] = pColor.r;
+      colors[i3 + 1] = pColor.g;
+      colors[i3 + 2] = pColor.b;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    // Custom circular particle texture for high-craft anti-aliased dots
+    const pCanvas = document.createElement('canvas');
+    pCanvas.width = 32;
+    pCanvas.height = 32;
+    const pCtx = pCanvas.getContext('2d');
+    const radGrad = pCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    radGrad.addColorStop(0, 'rgba(255,255,255,1)');
+    radGrad.addColorStop(0.35, 'rgba(255,255,255,0.85)');
+    radGrad.addColorStop(0.8, 'rgba(255,255,255,0.15)');
+    radGrad.addColorStop(1, 'rgba(255,255,255,0)');
+    pCtx.fillStyle = radGrad;
+    pCtx.fillRect(0, 0, 32, 32);
+
+    const particleTexture = new THREE.CanvasTexture(pCanvas);
+
+    const material = new THREE.PointsMaterial({
+      size: 3.2,
+      vertexColors: true,
+      map: particleTexture,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
 
-    if (response.ok) {
-      btn.innerHTML = '<span>Message Sent! ✨</span>';
-      btn.style.background = 'linear-gradient(135deg, #28c840, #00d4ff)';
-      form.reset();
-    } else {
-      btn.innerHTML = '<span>Error! ❌</span>';
-      console.error('Form submission error');
+    const particleSystem = new THREE.Points(geometry, material);
+    scene.add(particleSystem);
+
+    // Mouse Tracking with Spring Lerp
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    let currentMouseX = 0;
+    let currentMouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    // Window Resize Handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }, { passive: true });
+
+    // Render Animation Loop
+    let clock = new THREE.Clock();
+    let isVisible = true;
+
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isVisible) return;
+
+      const elapsed = clock.getElapsedTime();
+
+      // Smooth Spring Lerp for Camera Pan
+      currentMouseX += (targetMouseX - currentMouseX) * 0.04;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.04;
+
+      camera.position.x = currentMouseX * 35;
+      camera.position.y = 40 - currentMouseY * 25;
+      camera.lookAt(0, 0, 0);
+
+      // Undulate Particle Wave via vertex buffer
+      const posAttr = geometry.attributes.position;
+      const array = posAttr.array;
+
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        const px = array[i3];
+        const pz = array[i3 + 2];
+
+        // Harmonic wave oscillation
+        array[i3 + 1] =
+          initialY[i] +
+          Math.sin(px * 0.04 + elapsed * 1.2) * 6 +
+          Math.cos(pz * 0.04 + elapsed * 1.0) * 6;
+      }
+      posAttr.needsUpdate = true;
+
+      // Gentle continuous rotation
+      particleSystem.rotation.y = elapsed * 0.03;
+
+      renderer.render(scene, camera);
     }
-  } catch (error) {
-    btn.innerHTML = '<span>Error! ❌</span>';
-    console.error('Form submission failed', error);
+
+    animate();
   }
 
-  setTimeout(() => {
-    btn.innerHTML = originalHTML;
-    btn.style.background = '';
-    btn.disabled = false;
-  }, 4000);
-});
+  // ---------- 3. 3D Bento Portrait Card Perspective Tilt ----------
+  function initPortrait3DTilt() {
+    const card = document.getElementById('portrait-card');
+    if (!card) return;
 
-// ========== SMOOTH SCROLL FOR ALL ANCHOR LINKS ==========
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', (e) => {
-    e.preventDefault();
-    const target = document.querySelector(anchor.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  });
-});
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-// ========== TILT EFFECT ON CARDS (desktop only) ==========
-if (window.matchMedia('(min-width: 900px)').matches) {
-  document.querySelectorAll('.glass-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateY(-5px)`;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Normalized coordinates (-1 to +1)
+      const normX = (x / rect.width - 0.5) * 2;
+      const normY = (y / rect.height - 0.5) * 2;
+
+      card.style.setProperty('--tilt-x', `${-normY * 9}deg`);
+      card.style.setProperty('--tilt-y', `${normX * 9}deg`);
+      card.style.setProperty('--glare-x', `${(x / rect.width) * 100}%`);
+      card.style.setProperty('--glare-y', `${(y / rect.height) * 100}%`);
+      card.style.setProperty('--glare-opacity', '1');
     });
+
     card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+      card.style.setProperty('--glare-opacity', '0');
     });
-  });
-}
-
-console.log('%c🚀 Welcome to Sufyan\'s Portfolio!', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
-console.log('%c"Bugs are just features in disguise! 🐛✨"', 'color: #7b61ff; font-size: 14px;');
-
-// ========== CYBER SOUND EFFECTS SYNTHESIZER ==========
-let soundMuted = true;
-let audioCtx = null;
-
-function getAudioContext() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  return audioCtx;
-}
-
-function playTone(freq, type, duration, volume = 0.05) {
-  if (soundMuted) return;
-  try {
-    const ctx = getAudioContext();
-    if (ctx.state === 'suspended') {
-      ctx.resume();
-    }
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = type; // sine, square, sawtooth, triangle
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-    osc.stop(ctx.currentTime + duration);
-  } catch (e) {
-    console.error('Audio synthesis failed', e);
-  }
-}
-
-const sfx = {
-  click: () => playTone(600 + Math.random() * 400, 'sine', 0.04, 0.02),
-  beep: () => playTone(880, 'sine', 0.08, 0.04),
-  boop: () => playTone(440, 'sine', 0.08, 0.04),
-  success: () => {
-    playTone(523.25, 'triangle', 0.15, 0.05); // C5
-    setTimeout(() => playTone(659.25, 'triangle', 0.15, 0.05), 100); // E5
-    setTimeout(() => playTone(783.99, 'triangle', 0.3, 0.05), 200); // G5
-  },
-  fail: () => {
-    playTone(150, 'sawtooth', 0.3, 0.06);
-  },
-  alarm: () => {
-    playTone(800, 'square', 0.15, 0.03);
-    setTimeout(() => playTone(700, 'square', 0.15, 0.03), 150);
-  }
-};
-
-// ========== VISITOR DIAGNOSTICS & GEOLOCATION ==========
-function getOS() {
-  const ua = navigator.userAgent;
-  if (ua.indexOf("Win") !== -1) return "Windows";
-  if (ua.indexOf("Mac") !== -1) return "macOS";
-  if (ua.indexOf("Linux") !== -1) return "Linux";
-  if (ua.indexOf("Android") !== -1) return "Android";
-  if (ua.indexOf("like Mac") !== -1) return "iOS";
-  return "Linux/Unix OS";
-}
-
-function getBrowser() {
-  const ua = navigator.userAgent;
-  if (ua.indexOf("Chrome") !== -1 && ua.indexOf("Safari") !== -1) return "Chrome";
-  if (ua.indexOf("Firefox") !== -1) return "Firefox";
-  if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) return "Safari";
-  if (ua.indexOf("Edge") !== -1) return "Edge";
-  if (ua.indexOf("MSIE") !== -1 || !!document.documentMode) return "IE";
-  return "Modern Web Browser";
-}
-
-async function fetchVisitorDetails() {
-  const details = {
-    ip: '127.0.0.1',
-    country: 'Unknown Location',
-    region: 'Proxy Net',
-    city: 'Encrypted Grid',
-    isp: 'Incognito Provider',
-    os: getOS(),
-    browser: getBrowser(),
-    screen: `${window.screen.width}x${window.screen.height}`,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-    referrer: document.referrer || 'Direct Access',
-    battery: '100% (AC Locked)'
-  };
-
-  try {
-    if (navigator.getBattery) {
-      const battery = await navigator.getBattery();
-      details.battery = `${Math.round(battery.level * 100)}% (${battery.charging ? 'Charging' : 'Discharging'})`;
-    }
-  } catch (e) { }
-
-  try {
-    const response = await fetch('https://ipwho.is/');
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        details.ip = data.ip || details.ip;
-        details.country = data.country || details.country;
-        details.region = data.region || details.region;
-        details.city = data.city || details.city;
-        details.isp = data.connection?.isp || data.connection?.org || details.isp;
-      }
-    }
-  } catch (err) {
-    console.warn('Geolocation lookup failed, proceeding with local browser metadata.');
   }
 
-  return details;
-}
+  // ---------- 4. 3D Holographic Project Cards Tilt ----------
+  function initProjectCardsTilt() {
+    const cards = document.querySelectorAll('.project-3d-card');
+    if (!cards.length) return;
 
-// ========== INTERACTIVE COMMAND DECK CLI ==========
-const terminalOutput = document.getElementById('terminal-deck-output');
-const terminalInput = document.getElementById('terminal-deck-input');
-const terminalBody = document.getElementById('terminal-deck-body');
-const terminalTitle = document.getElementById('terminal-deck-title');
-const terminalContainer = document.getElementById('terminal-deck');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-const techStackHTML = `<pre><span class="code-keyword">const</span> <span class="code-variable">myTechStack</span> = {
-  <span class="code-key">frontend</span>: [<span class="code-string">'HTML'</span>, <span class="code-string">'CSS'</span>, <span class="code-string">'JavaScript'</span>, <span class="code-string">'React'</span>],
-  <span class="code-key">backend</span>:  [<span class="code-string">'Node.js'</span>, <span class="code-string">'Express'</span>, <span class="code-string">'MongoDB'</span>],
-  <span class="code-key">tools</span>:    [<span class="code-string">'Git'</span>, <span class="code-string">'Docker'</span>, <span class="code-string">'VS Code'</span>, <span class="code-string">'Postman'</span>],
-  <span class="code-key">cloud</span>:    [<span class="code-string">'AWS EC2'</span>, <span class="code-string">'CI/CD'</span>, <span class="code-string">'GitHub Actions'</span>],
-  <span class="code-key">learning</span>: [<span class="code-string">'Python'</span>, <span class="code-string">'DevOps'</span>, <span class="code-string">'Docker'</span>],
-  <span class="code-key">funFact</span>:  <span class="code-string">"Bugs are just features in disguise! 🐛✨"</span>
-};</pre>`;
+    cards.forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-function initTerminal() {
-  writeToTerminal('Welcome to Sufyan\'s interactive Command Deck.', 'info');
-  writeToTerminal('Click or Type: <span class="terminal-cmd-link" onclick="runTerminalCmd(\'help\')">"help"</span> for logs, <span class="terminal-cmd-link" onclick="runTerminalCmd(\'play\')">"play"</span> to bypass firewall, or <span class="terminal-cmd-link" onclick="runTerminalCmd(\'hack\')">"hack"</span> to audit connection.', 'info');
-  terminalOutput.innerHTML += techStackHTML;
-  scrollToBottom();
-}
+        const normX = (x / rect.width - 0.5) * 2;
+        const normY = (y / rect.height - 0.5) * 2;
 
-function writeToTerminal(text, type = '') {
-  const line = document.createElement('div');
-  line.className = `terminal-line ${type}`;
-  line.innerHTML = text;
-  terminalOutput.appendChild(line);
-  scrollToBottom();
-}
-
-function scrollToBottom() {
-  terminalOutput.scrollTop = terminalOutput.scrollHeight;
-}
-
-const commands = {
-  help: () => {
-    writeToTerminal('Authorization Console - Available Logs:', 'success');
-    writeToTerminal('  <b>neofetch</b>   - Display retro hacker environment specs');
-    writeToTerminal('  <b>hack</b>       - Trigger diagnostic scan of client connection');
-    writeToTerminal('  <b>play</b>       - Bypass security node (Fallout terminal puzzle)');
-    writeToTerminal('  <b>about</b>      - Scroll navigation -> About section');
-    writeToTerminal('  <b>skills</b>     - Scroll navigation -> Skills section');
-    writeToTerminal('  <b>experience</b> - Scroll navigation -> Experience section');
-    writeToTerminal('  <b>projects</b>   - Scroll navigation -> Projects section');
-    writeToTerminal('  <b>contact</b>    - Scroll navigation -> Contact section');
-    writeToTerminal('  <b>clear</b>      - Clear terminal outputs');
-  },
-  clear: () => {
-    terminalOutput.innerHTML = '';
-  },
-  neofetch: () => {
-    const asciiArt = `
-<span style="color:#00d4ff">       ____   ____</span>
-<span style="color:#00d4ff">      / __/  / __/</span>
-<span style="color:#00d4ff">     _\\ \\   / _/  </span>
-<span style="color:#00d4ff">    /___/  /_/    </span>
-`;
-    const details = `
-<span style="color:#00ff66">sufyan@portfolio</span>
-----------------
-<span style="color:#7b61ff">OS</span>: ${getOS()}
-<span style="color:#7b61ff">Browser</span>: ${getBrowser()}
-<span style="color:#7b61ff">Resolution</span>: ${window.screen.width}x${window.screen.height}
-<span style="color:#7b61ff">Cores</span>: ${navigator.hardwareConcurrency || 'N/A'} logical processors
-<span style="color:#7b61ff">Timezone</span>: ${Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'}
-<span style="color:#7b61ff">Aesthetic</span>: Hacker Cyberpunk v2.0
-`;
-    writeToTerminal(`<div class="neofetch-container"><div>${asciiArt}</div><div>${details}</div></div>`);
-  },
-  about: () => {
-    scrollToSection('about');
-    writeToTerminal('Navigating target section: about', 'info');
-  },
-  skills: () => {
-    scrollToSection('skills');
-    writeToTerminal('Navigating target section: skills', 'info');
-  },
-  experience: () => {
-    scrollToSection('experience');
-    writeToTerminal('Navigating target section: experience', 'info');
-  },
-  projects: () => {
-    scrollToSection('projects');
-    writeToTerminal('Navigating target section: projects', 'info');
-  },
-  contact: () => {
-    scrollToSection('contact');
-    writeToTerminal('Navigating target section: contact', 'info');
-  },
-  hack: async () => {
-    writeToTerminal('[*] Executing deep diagnostic audit scan...', 'warning');
-    sfx.alarm();
-
-    const hud = document.getElementById('cyber-hud');
-    const trigger = document.getElementById('cyber-hud-trigger');
-    if (hud) {
-      hud.classList.remove('minimized');
-      hud.classList.remove('hidden');
-    }
-    if (trigger) {
-      trigger.classList.remove('visible');
-    }
-
-    let visitorData = await fetchVisitorDetails();
-
-    let uniqueHits = 1;
-    try {
-      const statsRes = await fetch('/api/stats');
-      if (statsRes.ok) {
-        const statsData = await statsRes.json();
-        uniqueHits = statsData.totalUnique;
-      }
-    } catch (e) { }
-
-    let steps = [
-      `[*] Ping diagnostics resolved... OK.`,
-      `[+] Detected Node IP: <span style="color:#ff6b9d">${visitorData.ip}</span>`,
-      `[+] Node Position: ${visitorData.city}, ${visitorData.region}, ${visitorData.country}`,
-      `[+] Routing Provider: ${visitorData.isp}`,
-      `[+] Core Environment: ${visitorData.os} / ${visitorData.browser}`,
-      `[+] Frame Resolution: ${visitorData.screen}`,
-      `[+] Host Clock: ${new Date().toLocaleTimeString()} (${visitorData.timezone})`,
-      `[+] Node Power Status: ${visitorData.battery}`,
-      `[+] Total Unique Targets Exploited: <span style="color:#00d4ff">${uniqueHits}</span>`,
-      `[*] DIAGNOSTICS LOGGED SUCCESSFULLY.`
-    ];
-
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 350));
-      writeToTerminal(steps[i], 'success');
-      sfx.click();
-    }
-  },
-  play: () => {
-    startHackingGame();
-  }
-};
-
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ========== FALLOUT PASSPHRASE MINIGAME LOGIC ==========
-let gameActive = false;
-let secretWord = "";
-let attempts = 4;
-let gameWordsList = [];
-let clickedBrackets = new Set();
-
-const wordPool = [
-  "NETWORK", "FIREWALL", "ROUTING", "GATEWAY", "MONITOR", "HACKING", "EXPLOIT",
-  "SCANNER", "MALWARE", "SPYWARE", "ROOTKIT", "RECOVER", "SESSION", "CAPTURE",
-  "COMPILE", "DECRYPT", "ENCRYPT", "LOGGING", "AUDITED", "SYSTEMS", "PROCESS"
-];
-
-function startHackingGame() {
-  gameActive = true;
-  attempts = 4;
-  clickedBrackets.clear();
-
-  terminalContainer.classList.add('hacker-theme');
-  terminalTitle.textContent = 'sufyan@portfolio:~/firewall_bypass';
-  terminalOutput.innerHTML = '';
-
-  writeToTerminal('ROBCO INDUSTRIES (TM) TERMLINK ACTIVE', 'success');
-  writeToTerminal('BYPASS SECURITY NODE TO DECRYPT SECRET ARCHIVE.', 'success');
-  writeToTerminal('================================================', 'success');
-
-  const availableWords = wordPool.filter(w => w.length === 7);
-  const shuffled = [...availableWords].sort(() => 0.5 - Math.random());
-  gameWordsList = shuffled.slice(0, 8);
-  secretWord = gameWordsList[Math.floor(Math.random() * gameWordsList.length)];
-
-  renderGameScreen();
-}
-
-function renderGameScreen() {
-  let hexStart = 0xF4A0;
-  let gameRowsHTML = "";
-  const symbols = "$%&*/()[]{}<>@#*!;:,.?";
-
-  let stream = "";
-  let wordIndex = 0;
-  while (wordIndex < gameWordsList.length || stream.length < 240) {
-    if (wordIndex < gameWordsList.length && Math.random() < 0.35) {
-      stream += gameWordsList[wordIndex];
-      wordIndex++;
-    } else {
-      if (Math.random() < 0.15) {
-        const brType = [['[', ']'], ['{', '}'], ['<', '>'], ['(', ')']][Math.floor(Math.random() * 4)];
-        const length = Math.floor(Math.random() * 3) + 2;
-        let contents = "";
-        for (let k = 0; k < length; k++) {
-          contents += symbols[Math.floor(Math.random() * symbols.length)];
-        }
-        stream += brType[0] + contents + brType[1];
-      } else {
-        stream += symbols[Math.floor(Math.random() * symbols.length)];
-      }
-    }
-  }
-
-  let i = 0;
-  let tokens = [];
-  while (i < stream.length) {
-    let foundWord = null;
-    for (let word of gameWordsList) {
-      if (stream.substring(i, i + word.length) === word) {
-        foundWord = word;
-        break;
-      }
-    }
-
-    if (foundWord) {
-      tokens.push({ type: 'word', text: foundWord });
-      i += foundWord.length;
-      continue;
-    }
-
-    const openBrs = ['[', '{', '<', '('];
-    const closeBrs = [']', '}', '>', ')'];
-    const brIdx = openBrs.indexOf(stream[i]);
-
-    if (brIdx !== -1) {
-      const openBr = stream[i];
-      const closeBr = closeBrs[brIdx];
-      let matchIdx = -1;
-      for (let j = i + 1; j < Math.min(i + 12, stream.length); j++) {
-        if (stream[j] === closeBr) {
-          matchIdx = j;
-          break;
-        }
-        if (openBrs.includes(stream[j])) break;
-      }
-
-      if (matchIdx !== -1) {
-        const bracketText = stream.substring(i, matchIdx + 1);
-        tokens.push({ type: 'bracket', text: bracketText, id: `br-${i}` });
-        i = matchIdx + 1;
-        continue;
-      }
-    }
-
-    tokens.push({ type: 'char', text: stream[i] });
-    i++;
-  }
-
-  let currentOffset = 0;
-  let tempRowText = "";
-  let tempRowHTML = "";
-
-  function flushRow() {
-    if (tempRowHTML !== "") {
-      const addr = "0x" + (hexStart + currentOffset * 12).toString(16).toUpperCase();
-      gameRowsHTML += `<div class="game-row"><span class="game-hex">${addr}</span><span class="game-words">${tempRowHTML}</span></div>`;
-      tempRowHTML = "";
-      tempRowText = "";
-      currentOffset++;
-    }
-  }
-
-  for (let token of tokens) {
-    let tokenHTML = "";
-    if (token.type === 'word') {
-      tokenHTML = `<span class="game-word" data-word="${token.text}">${token.text}</span>`;
-    } else if (token.type === 'bracket') {
-      tokenHTML = `<span class="game-bracket" data-br-id="${token.id}" data-text="${token.text}">${token.text}</span>`;
-    } else {
-      tokenHTML = token.text;
-    }
-
-    if (tempRowText.length + token.text.length > 14) {
-      flushRow();
-    }
-
-    tempRowText += token.text;
-    tempRowHTML += tokenHTML;
-  }
-  flushRow();
-
-  let parsedHTML = `<div class="game-container">`;
-  parsedHTML += `<div class="game-col-memory">${gameRowsHTML}</div>`;
-  parsedHTML += `<div class="game-col-feedback">`;
-  parsedHTML += `<div class="game-attempts-row">`;
-  parsedHTML += `ATTEMPTS REMAINING: <span id="game-attempts-count">${attempts}</span><br/>`;
-  parsedHTML += `<span id="game-attempts-blocks" style="color:#00ff66">${"█ ".repeat(attempts)}</span>`;
-  parsedHTML += `</div>`;
-  parsedHTML += `<div class="game-feedback-logs" id="game-feedback-logs">`;
-  parsedHTML += `<div>> ATTACHING COMPILER...</div>`;
-  parsedHTML += `</div>`;
-  parsedHTML += `<div style="font-size:0.7rem; color:rgba(0, 255, 102, 0.6)">Type "abort" to exit.</div>`;
-  parsedHTML += `</div>`;
-  parsedHTML += `</div>`;
-
-  terminalOutput.innerHTML = parsedHTML;
-  scrollToBottom();
-
-  document.querySelectorAll('.game-word').forEach(el => {
-    el.addEventListener('click', (e) => {
-      const word = e.target.dataset.word;
-      if (word === '.......') return;
-      handleWordGuess(word, e.target);
-    });
-  });
-
-  document.querySelectorAll('.game-bracket').forEach(el => {
-    el.addEventListener('click', (e) => {
-      const brId = e.currentTarget.dataset.brId;
-      const text = e.currentTarget.dataset.text;
-      if (clickedBrackets.has(brId)) return;
-      clickedBrackets.add(brId);
-      handleBracketClick(brId, text, e.currentTarget);
-    });
-  });
-}
-
-function handleWordGuess(word, element) {
-  if (word === secretWord) {
-    sfx.success();
-    logGameFeedback(`> ACCESS GRANTED!`);
-    logGameFeedback(`> DECRYPTING NODE...`);
-
-    element.style.background = '#00ff66';
-    element.style.color = '#050508';
-
-    setTimeout(() => {
-      terminalContainer.classList.remove('hacker-theme');
-      terminalTitle.textContent = 'sufyan@portfolio:~';
-      terminalOutput.innerHTML = '';
-      writeToTerminal('=======================================', 'success');
-      writeToTerminal('🔓 SECURE ARCHIVE DECRYPTED SUCCESSFULLY', 'success');
-      writeToTerminal('=======================================', 'success');
-      writeToTerminal('<b>[LOG ENTRY DECRYPTED]</b>: "Greetings! Sufyan is a senior operations technician and developer. Specializes in building modern interfaces, scripting local integrations, and solving complex support structures. Ready for connection! 🚀"', 'info');
-      writeToTerminal('<br>Type "help" to list available deck processes.', 'info');
-      gameActive = false;
-    }, 1500);
-  } else {
-    let likeness = 0;
-    for (let k = 0; k < word.length; k++) {
-      if (word[k] === secretWord[k]) likeness++;
-    }
-
-    attempts--;
-    sfx.fail();
-    logGameFeedback(`> GUESS: "${word}"`);
-    logGameFeedback(`> LIKENESS = ${likeness}`);
-
-    element.textContent = '.'.repeat(word.length);
-    element.dataset.word = '.......';
-    element.className = 'game-word-dud';
-    element.style.color = 'rgba(0, 255, 102, 0.2)';
-
-    document.getElementById('game-attempts-count').textContent = attempts;
-    document.getElementById('game-attempts-blocks').textContent = "█ ".repeat(attempts);
-
-    if (attempts <= 0) {
-      sfx.alarm();
-      logGameFeedback(`> !!! SECURE LOCKOUT !!!`);
-      setTimeout(() => {
-        terminalContainer.classList.remove('hacker-theme');
-        terminalTitle.textContent = 'sufyan@portfolio:~';
-        terminalOutput.innerHTML = '';
-        writeToTerminal('❌ TERMINAL LOCKOUT ACTIVE. ACCESS REJECTED.', 'warning');
-        writeToTerminal('Type "play" to re-authorize entry credentials.', 'info');
-        gameActive = false;
-      }, 1500);
-    }
-  }
-}
-
-function handleBracketClick(brId, text, element) {
-  sfx.click();
-  element.style.color = 'rgba(0, 255, 102, 0.2)';
-
-  if (Math.random() < 0.4) {
-    attempts = 4;
-    logGameFeedback(`> ATTEMPTS REPLENISHED.`);
-    document.getElementById('game-attempts-count').textContent = attempts;
-    document.getElementById('game-attempts-blocks').textContent = "█ ".repeat(attempts);
-  } else {
-    const activeDuds = gameWordsList.filter(w => w !== secretWord && w !== '.......');
-    if (activeDuds.length > 0) {
-      const targetDud = activeDuds[Math.floor(Math.random() * activeDuds.length)];
-      const idx = gameWordsList.indexOf(targetDud);
-      gameWordsList[idx] = '.......';
-
-      document.querySelectorAll(`.game-word[data-word="${targetDud}"]`).forEach(el => {
-        el.textContent = '.'.repeat(targetDud.length);
-        el.dataset.word = '.......';
-        el.className = 'game-word-dud';
-        el.style.color = 'rgba(0, 255, 102, 0.2)';
+        card.style.transform = `perspective(1000px) rotateX(${-normY * 6}deg) rotateY(${normX * 6}deg) translateY(-4px)`;
+        card.style.setProperty('--card-mouse-x', `${(x / rect.width) * 100}%`);
+        card.style.setProperty('--card-mouse-y', `${(y / rect.height) * 100}%`);
       });
 
-      logGameFeedback(`> REMOVED DUD: "${targetDud}"`);
-    } else {
-      logGameFeedback(`> STABLE SYNC.`);
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+      });
+    });
+  }
+
+  // ---------- 5. Power-User Command Palette (⌘K) ----------
+  function initCommandPalette() {
+    const modal = document.getElementById('cmdk-modal');
+    const input = document.getElementById('cmdk-input');
+    const list = document.getElementById('cmdk-list');
+    const closeBtn = document.getElementById('cmdk-close-btn');
+    const triggerBtn = document.getElementById('cmdk-trigger-btn');
+    const heroBtn = document.getElementById('hero-cmdk-btn');
+
+    if (!modal || !input || !list) return;
+
+    const actions = [
+      {
+        id: 'projects',
+        title: 'Explore Featured Projects',
+        category: 'Navigation',
+        shortcut: 'P',
+        icon: 'folder-git-2',
+        run: () => scrollToId('projects'),
+      },
+      {
+        id: 'labs',
+        title: 'View Engineering Labs & Prototypes',
+        category: 'Navigation',
+        shortcut: 'L',
+        icon: 'flask-conical',
+        run: () => scrollToId('labs'),
+      },
+      {
+        id: 'experience',
+        title: 'Work Experience & Impact',
+        category: 'Navigation',
+        shortcut: 'E',
+        icon: 'briefcase',
+        run: () => scrollToId('experience'),
+      },
+      {
+        id: 'skills',
+        title: 'Tech Stack & Architecture',
+        category: 'Navigation',
+        shortcut: 'S',
+        icon: 'layers',
+        run: () => scrollToId('skills'),
+      },
+      {
+        id: 'about',
+        title: 'About Sufyan Farooq',
+        category: 'Navigation',
+        shortcut: 'A',
+        icon: 'user',
+        run: () => scrollToId('about'),
+      },
+      {
+        id: 'contact',
+        title: 'Send a Message / Contact',
+        category: 'Action',
+        shortcut: 'C',
+        icon: 'send',
+        run: () => scrollToId('contact'),
+      },
+      {
+        id: 'copy-email',
+        title: 'Copy Email Address to Clipboard',
+        category: 'Action',
+        shortcut: 'M',
+        icon: 'copy',
+        run: () => copyEmailToClipboard(),
+      },
+      {
+        id: 'github',
+        title: 'Open GitHub Profile',
+        category: 'External',
+        shortcut: 'G',
+        icon: 'github',
+        run: () => window.open('https://github.com/Sufyan-Farooq', '_blank'),
+      },
+      {
+        id: 'linkedin',
+        title: 'Open LinkedIn Profile',
+        category: 'External',
+        shortcut: 'I',
+        icon: 'linkedin',
+        run: () => window.open('https://www.linkedin.com/in/sufyan-farooq-077bbb264/', '_blank'),
+      },
+    ];
+
+    let filtered = actions;
+    let selectedIndex = 0;
+    let isOpen = false;
+
+    function renderItems() {
+      list.innerHTML = '';
+      if (!filtered.length) {
+        list.innerHTML = '<div style="padding: 1.5rem; text-align: center; color: var(--text-muted);">No commands matching query</div>';
+        return;
+      }
+
+      filtered.forEach((action, idx) => {
+        const item = document.createElement('div');
+        item.className = `cmdk-item ${idx === selectedIndex ? 'selected' : ''}`;
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', idx === selectedIndex ? 'true' : 'false');
+
+        item.innerHTML = `
+          <div class="cmdk-item-left">
+            <i data-lucide="${action.icon}" class="cmdk-item-icon"></i>
+            <span>${action.title}</span>
+          </div>
+          ${action.shortcut ? `<kbd class="cmdk-item-shortcut">${action.shortcut}</kbd>` : ''}
+        `;
+
+        item.addEventListener('click', () => {
+          selectedIndex = idx;
+          executeSelected();
+        });
+
+        list.appendChild(item);
+      });
+
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
     }
-  }
-}
 
-function logGameFeedback(msg) {
-  const logs = document.getElementById('game-feedback-logs');
-  if (logs) {
-    const line = document.createElement('div');
-    line.innerHTML = msg;
-    logs.appendChild(line);
-    logs.scrollTop = logs.scrollHeight;
-  }
-}
-
-// ========== TERMINAL COMMAND EXECUTION ==========
-function executeCommand(rawCmd) {
-  const inputVal = rawCmd.trim().toLowerCase();
-
-  if (gameActive) {
-    if (inputVal === 'exit' || inputVal === 'abort') {
-      gameActive = false;
-      terminalContainer.classList.remove('hacker-theme');
-      terminalTitle.textContent = 'sufyan@portfolio:~';
-      terminalOutput.innerHTML = '';
-      initTerminal();
-    } else {
-      logGameFeedback(`> INVALID CMD DURING PUZZLE.`);
+    function openModal() {
+      isOpen = true;
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      input.value = '';
+      filtered = actions;
+      selectedIndex = 0;
+      renderItems();
+      setTimeout(() => input.focus(), 30);
     }
-    return;
-  }
 
-  if (inputVal === '') return;
-
-  if (commands[inputVal]) {
-    commands[inputVal]();
-  } else {
-    writeToTerminal(`bash: command not found: ${rawCmd}. Type "help" for log command references.`, 'warning');
-  }
-}
-
-window.runTerminalCmd = function (cmd) {
-  const el = document.getElementById('skills');
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-
-  setTimeout(() => {
-    terminalInput.focus();
-    writeToTerminal(`<span class="terminal-prompt">${terminalTitle.textContent.split(':')[1] || '~'} $</span> ${cmd}`);
-    sfx.click();
-    executeCommand(cmd);
-  }, 500);
-};
-
-// ========== TERMINAL KEY HANDLING ==========
-terminalInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const rawVal = terminalInput.value;
-    sfx.click();
-    writeToTerminal(`<span class="terminal-prompt">${terminalTitle.textContent.split(':')[1] || '~'} $</span> ${rawVal}`);
-    terminalInput.value = '';
-    executeCommand(rawVal);
-  }
-});
-
-terminalBody.addEventListener('click', () => {
-  terminalInput.focus();
-});
-
-// ========== CYBER SOUND UI CONTROL ==========
-const soundControlBtn = document.getElementById('sound-control');
-soundControlBtn.addEventListener('click', () => {
-  soundMuted = !soundMuted;
-  if (soundMuted) {
-    soundControlBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-    soundControlBtn.title = "Unmute retro sounds";
-  } else {
-    soundControlBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-    soundControlBtn.title = "Mute retro sounds";
-    sfx.click();
-  }
-});
-
-// ========== CYBER HUD DIAGNOSTICS WIDGET ==========
-const hudBody = document.getElementById('cyber-hud-body');
-const hudHeader = document.getElementById('cyber-hud-header');
-const hudToggleBtn = document.getElementById('cyber-hud-toggle-btn');
-const hudCloseBtn = document.getElementById('cyber-hud-close-btn');
-const hudDot = document.getElementById('cyber-hud-status-dot');
-const cyberHud = document.getElementById('cyber-hud');
-const hudTrigger = document.getElementById('cyber-hud-trigger');
-const hudTriggerDot = document.getElementById('cyber-hud-trigger-dot');
-
-function updateHUDLayout() {
-  if (cyberHud.classList.contains('minimized') || cyberHud.classList.contains('hidden')) {
-    cyberHud.classList.add('hidden');
-    cyberHud.classList.remove('minimized');
-    hudTrigger.classList.add('visible');
-  } else {
-    cyberHud.classList.remove('hidden');
-    hudTrigger.classList.remove('visible');
-  }
-}
-
-hudHeader.addEventListener('click', () => {
-  cyberHud.classList.toggle('minimized');
-  const icon = hudToggleBtn.querySelector('i');
-  if (cyberHud.classList.contains('minimized')) {
-    icon.className = 'fas fa-chevron-up';
-    if (hudDot) hudDot.className = 'cyber-hud-dot warning';
-  } else {
-    icon.className = 'fas fa-minus';
-    if (hudDot) hudDot.className = 'cyber-hud-dot';
-  }
-  updateHUDLayout();
-});
-
-hudCloseBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  cyberHud.classList.add('hidden');
-  cyberHud.classList.remove('minimized');
-  hudTrigger.classList.add('visible');
-  sfx.click();
-});
-
-hudTrigger.addEventListener('click', () => {
-  cyberHud.classList.remove('hidden');
-  cyberHud.classList.remove('minimized');
-  hudTrigger.classList.remove('visible');
-
-  const icon = hudToggleBtn.querySelector('i');
-  if (icon) icon.className = 'fas fa-minus';
-  if (hudDot) hudDot.className = 'cyber-hud-dot';
-
-  if (hudTriggerDot) hudTriggerDot.classList.remove('active');
-  sfx.success();
-});
-
-window.addEventListener('resize', updateHUDLayout);
-
-function writeToHUD(msg, type = '') {
-  if (!hudBody) return;
-  const line = document.createElement('div');
-  line.className = `cyber-hud-line ${type}`;
-  line.textContent = msg;
-  hudBody.appendChild(line);
-  hudBody.scrollTop = hudBody.scrollHeight;
-}
-
-// Records an anonymous, aggregate-only visit (total + city count).
-// The server determines location from the connection itself, so no
-// device/browser/battery details need to be sent here anymore.
-async function logVisitToBackend() {
-  try {
-    const response = await fetch('/api/visit', { method: 'POST' });
-    if (response.ok) {
-      console.log('Visit logged (aggregate stats only).');
+    function closeModal() {
+      isOpen = false;
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
     }
-  } catch (e) {
-    console.log('Express backend log unavailable (running dynamically/statically).');
-  }
-}
 
-async function runIntrusionScan() {
-  writeToHUD('[SYS] TARGET ENGAGED. MONITORING CONSOLE DATA...');
-  sfx.click();
-
-  const visitorData = await fetchVisitorDetails();
-  logVisitToBackend();
-
-  let uniqueHits = 1;
-  try {
-    const statsRes = await fetch('/api/stats');
-    if (statsRes.ok) {
-      const statsData = await statsRes.json();
-      uniqueHits = statsData.totalUnique;
+    function executeSelected() {
+      if (filtered[selectedIndex]) {
+        const action = filtered[selectedIndex];
+        closeModal();
+        action.run();
+      }
     }
-  } catch (e) { }
 
-  let logLines = [
-    { text: `IP: ${visitorData.ip}`, type: 'success' },
-    { text: `LOC: ${visitorData.city}, ${visitorData.country}`, type: 'info' },
-    { text: `[SYS] UNIQUE TARGETS EXPOSED: ${uniqueHits}`, type: 'success' },
-    { text: `[SYS] STATUS: COMPROMISED`, type: 'critical' },
-    { text: `[SYS] CONSOLE INTRUSION COMPLETED.`, type: 'success' }
-  ];
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
 
-  for (let k = 0; k < logLines.length; k++) {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    writeToHUD(logLines[k].text, logLines[k].type);
-    sfx.click();
+    // Input filtering
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      filtered = actions.filter((a) =>
+        a.title.toLowerCase().includes(q) || a.category.toLowerCase().includes(q)
+      );
+      selectedIndex = 0;
+      renderItems();
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      // Toggle modal with Ctrl+K or Cmd+K
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        isOpen ? closeModal() : openModal();
+        return;
+      }
+
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeModal();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex + 1) % filtered.length;
+        renderItems();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex - 1 + filtered.length) % filtered.length;
+        renderItems();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        executeSelected();
+      }
+    });
+
+    if (triggerBtn) triggerBtn.addEventListener('click', openModal);
+    if (heroBtn) heroBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
   }
 
-  // Append redirect and minigame trigger buttons
-  await new Promise(resolve => setTimeout(resolve, 400));
-  const btnContainer = document.createElement('div');
-  btnContainer.style.marginTop = '8px';
-  btnContainer.style.display = 'flex';
-  btnContainer.style.flexDirection = 'column';
-  btnContainer.style.gap = '6px';
-  btnContainer.innerHTML = `
-    <a href="info.html" class="btn btn-primary btn-full" style="padding: 6px 8px; font-size: 0.72rem; border-radius: var(--radius-sm); font-family: var(--font-mono); width: 100%; border: 1px solid #ff3b30; color: #ff3b30; background: rgba(255, 59, 48, 0.05); text-align: center; text-decoration: none; cursor: pointer; display: block; transition: 0.2s;">VIEW SECURITY REPORT</a>
-    <button class="btn btn-primary btn-full" style="padding: 6px 8px; font-size: 0.72rem; border-radius: var(--radius-sm); font-family: var(--font-mono); width: 100%; border: 1px solid var(--accent); color: var(--accent); background: rgba(0, 212, 255, 0.05); cursor: pointer; transition: 0.2s;" onclick="runTerminalCmd('play')">BYPASS FIREWALL NODE</button>
-  `;
+  // ---------- 6. Live Telemetry & Local AST Clock ----------
+  function initLiveTelemetry() {
+    const pingNum = document.getElementById('live-ping-num');
+    const edgePingLabel = document.getElementById('edge-ping-label');
+    const localTimeNum = document.getElementById('local-time-num');
+    const heroClock = document.getElementById('hero-clock');
 
-  const reportBtn = btnContainer.querySelector('a');
-  reportBtn.onmouseover = () => { reportBtn.style.background = 'rgba(255, 59, 48, 0.2)'; reportBtn.style.boxShadow = '0 0 10px rgba(255, 59, 48, 0.3)'; };
-  reportBtn.onmouseout = () => { reportBtn.style.background = 'rgba(255, 59, 48, 0.05)'; reportBtn.style.boxShadow = 'none'; };
+    // Live AST Clock (Jeddah is UTC+3)
+    function updateClock() {
+      const now = new Date();
+      // Format time in Arabia Standard Time
+      const options = {
+        timeZone: 'Asia/Riyadh',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      };
+      const formatter = new Intl.DateTimeFormat([], options);
+      const timeStr = formatter.format(now);
 
-  const minigameBtn = btnContainer.querySelector('button');
-  minigameBtn.onmouseover = () => { minigameBtn.style.background = 'rgba(0, 212, 255, 0.2)'; minigameBtn.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.3)'; };
-  minigameBtn.onmouseout = () => { minigameBtn.style.background = 'rgba(0, 212, 255, 0.05)'; minigameBtn.style.boxShadow = 'none'; };
+      if (localTimeNum) localTimeNum.textContent = timeStr;
+      if (heroClock) heroClock.textContent = `Jeddah, SA • ${timeStr.slice(0, 5)} AST`;
+    }
 
-  hudBody.appendChild(btnContainer);
-  hudBody.scrollTop = hudBody.scrollHeight;
-  sfx.beep();
-}
+    updateClock();
+    setInterval(updateClock, 1000);
 
-// Start CLI and HUD scan on window load
-window.addEventListener('load', () => {
-  initTerminal();
+    // Measure real RTT edge latency
+    async function measurePing() {
+      try {
+        const start = performance.now();
+        await fetch('/api/stats', { method: 'GET', cache: 'no-store' });
+        const latency = Math.round(performance.now() - start);
 
-  // Initialize Lucide icons
-  if (window.lucide) {
-    lucide.createIcons();
+        if (pingNum) pingNum.textContent = latency;
+        if (edgePingLabel) edgePingLabel.textContent = `Edge RTT (${latency}ms)`;
+      } catch (err) {
+        if (pingNum) pingNum.textContent = '<25';
+      }
+    }
+
+    measurePing();
+    setInterval(measurePing, 20000);
   }
 
-  // Hide HUD by default on all devices on initial load
-  cyberHud.classList.add('hidden');
-  cyberHud.classList.remove('minimized');
-  hudTrigger.classList.add('visible');
-  if (hudTriggerDot) hudTriggerDot.classList.add('active');
+  // ---------- 7. Mobile Drawer Navigation ----------
+  function initMobileDrawer() {
+    const navToggle = document.getElementById('nav-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    const links = document.querySelectorAll('.mobile-link');
 
-  setTimeout(runIntrusionScan, 800);
-});
+    if (!navToggle || !drawer) return;
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = drawer.classList.contains('open');
+      drawer.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(!isOpen));
+      drawer.setAttribute('aria-hidden', String(isOpen));
+    });
+
+    links.forEach((l) => {
+      l.addEventListener('click', () => {
+        drawer.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+      });
+    });
+  }
+
+  // ---------- 8. Contact Form & Copy Email ----------
+  function copyEmailToClipboard() {
+    const email = 'sufyanfarooqsmf@gmail.com';
+    navigator.clipboard.writeText(email).then(() => {
+      const copyBtnText = document.getElementById('copy-btn-text');
+      if (copyBtnText) {
+        const original = copyBtnText.textContent;
+        copyBtnText.textContent = 'Copied!';
+        setTimeout(() => {
+          copyBtnText.textContent = original;
+        }, 2000);
+      }
+    });
+  }
+
+  function initContactForm() {
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
+    const submitBtn = document.getElementById('submit-btn');
+    const copyBtn = document.getElementById('copy-email-btn');
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', copyEmailToClipboard);
+    }
+
+    if (!form || !status || !submitBtn) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Transmitting...</span>';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (response.ok) {
+          status.textContent = 'Message transmitted successfully. I will get back to you shortly!';
+          status.className = 'form-status success';
+          form.reset();
+        } else {
+          status.textContent = 'Failed to transmit message. Please email directly at sufyanfarooqsmf@gmail.com';
+          status.className = 'form-status error';
+        }
+      } catch (err) {
+        status.textContent = 'Network error. Please email directly at sufyanfarooqsmf@gmail.com';
+        status.className = 'form-status error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        if (window.lucide) window.lucide.createIcons();
+      }
+    });
+  }
+
+  // ---------- 9. Record Silent Visitor Analytics ----------
+  function recordVisit() {
+    try {
+      fetch('/api/visit', { method: 'POST' }).catch(() => {});
+    } catch (e) {}
+  }
+
+  // ---------- DOM Ready Bootstrapper ----------
+  document.addEventListener('DOMContentLoaded', () => {
+    initIcons();
+    initThreeJsCanvas();
+    initPortrait3DTilt();
+    initProjectCardsTilt();
+    initCommandPalette();
+    initLiveTelemetry();
+    initMobileDrawer();
+    initContactForm();
+    recordVisit();
+  });
+})();
