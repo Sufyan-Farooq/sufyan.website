@@ -475,22 +475,8 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Measure real RTT edge latency
-    async function measurePing() {
-      try {
-        const start = performance.now();
-        await fetch('/api/stats', { method: 'GET', cache: 'no-store' });
-        const latency = Math.round(performance.now() - start);
-
-        if (pingNum) pingNum.textContent = latency;
-        if (edgePingLabel) edgePingLabel.textContent = `Edge RTT (${latency}ms)`;
-      } catch (err) {
-        if (pingNum) pingNum.textContent = '<25';
-      }
-    }
-
-    measurePing();
-    setInterval(measurePing, 20000);
+    // The former edge-RTT label was not a meaningful performance claim for
+    // visitors. Keep the local Jeddah clock without making repeated requests.
   }
 
   // ---------- 7. Mobile Drawer Navigation ----------
@@ -587,9 +573,6 @@
   // ---------- DOM Ready Bootstrapper ----------
   document.addEventListener('DOMContentLoaded', () => {
     initIcons();
-    initThreeJsCanvas();
-    initPortrait3DTilt();
-    initProjectCardsTilt();
     initCommandPalette();
     initLiveTelemetry();
     initMobileDrawer();

@@ -3,5 +3,12 @@ stats.json
 package-lock.json
 .system_generated/
 .gemini/
+# Local Impeccable review artifacts; keep the design-system sidecar versioned.
+.impeccable/build/
+.impeccable/mocks/
+.impeccable/review/
+# Original attachments are preserved locally; the site uses assets/plates copies.
+/assets/mawarith-screenshot.png
+/assets/turnup-screenshot.png
 *.exe
 .agent/**/bin/

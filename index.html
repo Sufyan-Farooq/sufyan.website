@@ -1,747 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sufyan Mohammed Farooq — Systems & Full-Stack Developer</title>
-  <meta name="description"
-    content="Portfolio of Sufyan Mohammed Farooq — Systems & Full-Stack Developer, IT Support Specialist, and Operations Coordinator based in Jeddah, Saudi Arabia." />
-  <meta name="keywords" content="Sufyan Farooq, systems developer, full stack, IT specialist, Three.js, React, Node.js, Jeddah, Saudi Arabia" />
+  <meta name="theme-color" content="#eef4fa" />
+  <title>Sufyan Farooq — Practical technology for real business needs</title>
+  <meta name="description" content="Sufyan Mohammed Farooq builds practical technology that solves business needs and makes everyday work easier. Explore selected projects, experience, and contact details." />
+  <meta name="keywords" content="Sufyan Farooq, software developer, business technology, full stack, IT support, Jeddah, Saudi Arabia" />
   <meta name="author" content="Sufyan Mohammed Farooq" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="assets/logo-128.png" />
-
-  <!-- Preconnect & Fonts: Albert Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet" />
-
-  <!-- Preload hero portrait for optimal LCP -->
-  <link rel="preload" as="image" href="assets/profile.webp" type="image/webp" fetchpriority="high" />
-
-  <!-- Stylesheet -->
+  <link href="https://fonts.googleapis.com/css2?family=Pliant:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <!-- Three.js Interactive 3D Background Canvas -->
-  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <!-- Navigation -->
   <header class="site-header" id="navbar">
-    <nav class="nav-container" aria-label="Primary Navigation">
-      <a href="#hero" class="nav-brand" aria-label="Sufyan Farooq Home">
-        <img src="assets/logo-64.webp" alt="SF Logo" class="brand-logo-img" width="34" height="34" />
-        <span class="brand-title">Sufyan Farooq</span>
+    <nav class="nav-container" aria-label="Primary navigation">
+      <a href="#hero" class="nav-brand" aria-label="Sufyan Mohammed Farooq, home">
+        <span class="brand-block"><span class="brand-title">Sufyan Mohammed Farooq</span><span class="brand-role">DEVELOPER / SENIOR SUPPORT ENGINEER</span></span>
       </a>
-
       <div class="nav-links" id="nav-links">
+        <a href="#projects" class="nav-link">Work</a>
         <a href="#about" class="nav-link">About</a>
-        <a href="#skills" class="nav-link">Stack</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#labs" class="nav-link">Labs</a>
-        <a href="#experience" class="nav-link">Experience</a>
         <a href="#contact" class="nav-link">Contact</a>
       </div>
-
       <div class="nav-actions">
-        <!-- Quick Command Palette Trigger Button -->
-        <button class="cmdk-trigger" id="cmdk-trigger-btn" aria-label="Open Command Palette" title="Open Command Palette (Ctrl+K or ⌘K)">
-          <i data-lucide="command" class="icon-sm"></i>
-          <span class="cmdk-key-hint">K</span>
-        </button>
-        <a href="#contact" class="btn btn-sm btn-primary">Let's Connect</a>
-        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
+        <span class="nav-location">Jeddah</span>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-drawer"><span></span><span></span></button>
       </div>
     </nav>
   </header>
 
-  <!-- Mobile Drawer Overlay -->
   <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
     <div class="mobile-drawer-links">
       <a href="#about" class="mobile-link">About</a>
-      <a href="#skills" class="mobile-link">Stack</a>
-      <a href="#projects" class="mobile-link">Projects</a>
-      <a href="#labs" class="mobile-link">Labs & Experiments</a>
+      <a href="#projects" class="mobile-link">Selected work</a>
+      <a href="#skills" class="mobile-link">How I work</a>
       <a href="#experience" class="mobile-link">Experience</a>
       <a href="#contact" class="mobile-link">Contact</a>
     </div>
-    <div class="mobile-drawer-footer">
-      <p>Jeddah, Saudi Arabia • UTC+3</p>
-      <a href="mailto:sufyanfarooqsmf@gmail.com" class="mobile-email">sufyanfarooqsmf@gmail.com</a>
-    </div>
+    <div class="mobile-drawer-footer"><p>Jeddah, Saudi Arabia · UTC+3</p><a href="mailto:sufyanfarooqsmf@gmail.com" class="mobile-email">sufyanfarooqsmf@gmail.com</a></div>
   </div>
 
   <main id="main-content">
-    <!-- Hero Section -->
     <section id="hero" class="hero-section">
       <div class="hero-container">
         <div class="hero-text-column">
-          <!-- Availability & Telemetry Pill -->
-          <div class="status-badge">
-            <span class="status-dot-static"></span>
-            <span class="status-badge-text">Available for Opportunities</span>
-            <span class="status-badge-sep">•</span>
-            <span class="status-badge-loc" id="hero-clock">Jeddah, SA</span>
-          </div>
-
-          <h1 class="hero-headline">
-            Engineering robust systems & fluid web experiences.
-          </h1>
-
-          <p class="hero-subline">
-            I'm <strong>Sufyan Mohammed Farooq</strong> — a versatile developer and Senior Support Engineer based in Jeddah, Saudi Arabia. Bridging full-stack software development, automated AI workflows, and enterprise IT infrastructure.
-          </p>
-
+          <p class="hero-location">01 <span>/</span> Introduction</p>
+          <h1 class="hero-headline">Technology for <em>real</em> business needs.</h1>
+          <p class="hero-subline">I build practical tools that make work easier for the people using them.</p>
           <div class="hero-cta-group">
-            <a href="#projects" class="btn btn-primary">
-              <span>Explore Projects</span>
-              <i data-lucide="arrow-right" class="icon-sm"></i>
-            </a>
-            <a href="#contact" class="btn btn-secondary">
-              <span>Get in Touch</span>
-            </a>
-            <button class="btn btn-ghost cmdk-cta" id="hero-cmdk-btn">
-              <i data-lucide="terminal" class="icon-sm"></i>
-              <span>Quick Actions</span>
-              <kbd class="kbd-badge">⌘K</kbd>
-            </button>
-          </div>
-
-          <!-- Real Metric Indicators -->
-          <div class="hero-metrics">
-            <div class="metric-item">
-              <div class="metric-value">2,000<span class="metric-accent">+</span></div>
-              <div class="metric-label">Users Supported Daily</div>
-            </div>
-            <div class="metric-divider"></div>
-            <div class="metric-item">
-              <div class="metric-value">98<span class="metric-accent">%</span></div>
-              <div class="metric-label">Client Satisfaction Rate</div>
-            </div>
-            <div class="metric-divider"></div>
-            <div class="metric-item">
-              <div class="metric-value">&lt;20<span class="metric-accent">ms</span></div>
-              <div class="metric-label" id="edge-ping-label">Edge Response Time</div>
-            </div>
+            <a href="#projects" class="btn btn-primary"><span>Explore selected work</span><i data-lucide="arrow-down-right" class="icon-sm" aria-hidden="true"></i></a>
+            <a href="#contact" class="btn btn-secondary"><span>Let's talk</span><i data-lucide="arrow-up-right" class="icon-sm" aria-hidden="true"></i></a>
           </div>
         </div>
-
-        <!-- Hero Visual: Editorial 3D Bento Portrait Stage -->
         <div class="hero-visual-column">
-          <div class="portrait-stage" id="portrait-stage">
-            <!-- 3D Perspective Card -->
-            <div class="portrait-bento-card" id="portrait-card">
-              <!-- High Res Responsive Picture -->
-              <picture class="portrait-picture">
-                <source srcset="assets/profile.webp" type="image/webp" />
-                <img
-                  src="assets/profile.jpg"
-                  alt="Sufyan Mohammed Farooq — Systems & Full-Stack Developer"
-                  class="portrait-image"
-                  width="480"
-                  height="600"
-                  loading="eager"
-                  fetchpriority="high"
-                />
-              </picture>
-
-              <!-- Dynamic Specular Glare (mouse tracking) -->
-              <div class="portrait-specular-glare" id="portrait-glare" aria-hidden="true"></div>
-
-              <!-- Floating Tactile Glass Pills -->
-              <span class="portrait-pill portrait-pill-top">
-                <i data-lucide="shield-check" class="pill-icon"></i>
-                <span>Senior Support & Dev</span>
-              </span>
-
-              <span class="portrait-pill portrait-pill-bottom">
-                <span class="pill-mono">21°32'N 39°10'E</span>
-                <span class="pill-sep">/</span>
-                <span class="pill-highlight">Saudi Arabia</span>
-              </span>
-            </div>
-          </div>
+          <figure class="portrait-bento-card" id="portrait-card">
+            <picture class="portrait-picture"><img src="assets/plates/portrait.png" alt="Sufyan Mohammed Farooq" class="portrait-image" width="680" height="1022" fetchpriority="high" /></picture>
+          </figure>
         </div>
-      </div>
-
-      <!-- Scroll Indicator -->
-      <a href="#about" class="scroll-cue" aria-label="Scroll to content">
-        <div class="scroll-mouse">
-          <div class="scroll-wheel-static"></div>
-        </div>
-        <span>Explore Work</span>
-      </a>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-      <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="user" class="eyebrow-icon"></i>
-            <span>Background & Philosophy</span>
-          </div>
-          <h2 class="section-title">Bridging technology with human operational needs.</h2>
-          <p class="section-lead">
-            Born and raised in Saudi Arabia, I bring native fluency in English, Arabic, Hindi, and Urdu alongside deep technical curiosity.
-          </p>
-        </div>
-
-        <div class="bento-grid about-bento">
-          <!-- Main Narrative Tile -->
-          <div class="bento-cell bento-2x2 about-narrative-cell">
-            <div class="cell-content">
-              <div class="cell-header-inline">
-                <i data-lucide="cpu" class="inline-cell-icon"></i>
-                <h3 class="cell-heading">Curiosity as the Core Engine</h3>
-              </div>
-              <p class="cell-text">
-                Currently serving as a <strong>Senior Onsite Support Engineer</strong> at Digival IT Solutions in Jeddah, supporting university Learning Management Systems and orchestrating client operations while concurrently pursuing my <strong>MBA</strong> (expected 2027).
-              </p>
-              <p class="cell-text">
-                I believe software engineering thrives when paired with relentless exploration: building full-stack applications with modern frameworks, diving into cyber defense labs, and accelerating complex workflows using autonomous AI agents.
-              </p>
-              <div class="language-tags">
-                <span class="lang-tag"><span class="lang-dot"></span>English (Native)</span>
-                <span class="lang-tag"><span class="lang-dot"></span>Arabic (Native/Bilingual)</span>
-                <span class="lang-tag"><span class="lang-dot"></span>Urdu & Hindi (Fluent)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Academic & Professional Growth Tile -->
-          <div class="bento-cell about-growth-cell">
-            <div class="cell-content">
-              <div class="cell-header-inline">
-                <i data-lucide="graduation-cap" class="inline-cell-icon"></i>
-                <h3 class="cell-heading">Education & Strategy</h3>
-              </div>
-              <ul class="growth-list">
-                <li>
-                  <strong>MBA in Progress</strong>
-                  <span>Targeting 2027 • Executive leadership & operations</span>
-                </li>
-                <li>
-                  <strong>B.Sc. in Computer Science</strong>
-                  <span>Pioneer College, Osmania University</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Mindset & Exploration Tile -->
-          <div class="bento-cell about-radar-cell">
-            <div class="cell-content">
-              <div class="cell-header-inline">
-                <i data-lucide="sparkles" class="inline-cell-icon"></i>
-                <h3 class="cell-heading">Focus Areas</h3>
-              </div>
-              <div class="focus-pills">
-                <span class="focus-pill">Full-Stack Web</span>
-                <span class="focus-pill">Distributed WebSockets</span>
-                <span class="focus-pill">Systems Telemetry</span>
-                <span class="focus-pill">AI Agent Workflows</span>
-                <span class="focus-pill">Cyber Defense Labs</span>
-                <span class="focus-pill">LMS Architecture</span>
-              </div>
-            </span>
-          </div>
-        </div>
+        <aside class="hero-aside" aria-label="How I approach technology">
+          <p class="aside-place">Jeddah</p>
+          <span class="aside-rule" aria-hidden="true"></span>
+          <p>Solving business needs through technology.</p>
+          <span class="aside-rule" aria-hidden="true"></span>
+          <p>Builder<br />Problem solver<br />People focused</p>
+        </aside>
       </div>
     </section>
 
-    <!-- Skills & Tech Stack Section -->
-    <section id="skills" class="section">
+    <section id="projects" class="section projects-section">
       <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="layers" class="eyebrow-icon"></i>
-            <span>Engineering Architecture</span>
-          </div>
-          <h2 class="section-title">The Tools & Technologies I Build With.</h2>
-          <p class="section-lead">A selected toolkit tailored for high reliability, fast iteration, and clean interfaces.</p>
-        </div>
-
-        <div class="bento-grid stack-grid">
-          <!-- Frontend Architecture -->
-          <div class="bento-cell stack-cell">
-            <div class="cell-content">
-              <div class="stack-header">
-                <i data-lucide="layout" class="cell-icon"></i>
-                <span class="stack-category">Frontend & UI</span>
-              </div>
-              <ul class="stack-items">
-                <li><span class="tech-name">React 19 & Next.js</span><span class="tech-tag">Framework</span></li>
-                <li><span class="tech-name">TypeScript</span><span class="tech-tag">Type Safety</span></li>
-                <li><span class="tech-name">Three.js / WebGL</span><span class="tech-tag">3D Interactive</span></li>
-                <li><span class="tech-name">Tailwind / Modern CSS</span><span class="tech-tag">Design Systems</span></li>
-                <li><span class="tech-name">HTML5 Canvas & SVG</span><span class="tech-tag">Graphics</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Backend & Realtime -->
-          <div class="bento-cell stack-cell">
-            <div class="cell-content">
-              <div class="stack-header">
-                <i data-lucide="server" class="cell-icon"></i>
-                <span class="stack-category">Backend & Realtime</span>
-              </div>
-              <ul class="stack-items">
-                <li><span class="tech-name">Node.js & Express</span><span class="tech-tag">Runtime</span></li>
-                <li><span class="tech-name">Socket.io & WebSockets</span><span class="tech-tag">Realtime Sync</span></li>
-                <li><span class="tech-name">PostgreSQL & Prisma</span><span class="tech-tag">Relational Data</span></li>
-                <li><span class="tech-name">MongoDB & Mongoose</span><span class="tech-tag">Document Store</span></li>
-                <li><span class="tech-name">REST & GraphQL APIs</span><span class="tech-tag">Integration</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Systems & Cloud -->
-          <div class="bento-cell stack-cell">
-            <div class="cell-content">
-              <div class="stack-header">
-                <i data-lucide="cloud" class="cell-icon"></i>
-                <span class="stack-category">DevOps & Systems</span>
-              </div>
-              <ul class="stack-items">
-                <li><span class="tech-name">Docker & Containers</span><span class="tech-tag">Deployment</span></li>
-                <li><span class="tech-name">AWS EC2 & S3</span><span class="tech-tag">Cloud Infra</span></li>
-                <li><span class="tech-name">Git & GitHub Actions</span><span class="tech-tag">CI / CD</span></li>
-                <li><span class="tech-name">Linux & Bash Shells</span><span class="tech-tag">OS Administration</span></li>
-                <li><span class="tech-name">Postman & UAT Tests</span><span class="tech-tag">QA & Benchmarks</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Systems Operations & Client Success -->
-          <div class="bento-cell stack-cell">
-            <div class="cell-content">
-              <div class="stack-header">
-                <i data-lucide="heart-handshake" class="cell-icon"></i>
-                <span class="stack-category">Operations & Client Support</span>
-              </div>
-              <ul class="stack-items">
-                <li><span class="tech-name">LMS Technical Support</span><span class="tech-tag">Enterprise</span></li>
-                <li><span class="tech-name">Stakeholder Coordination</span><span class="tech-tag">Relations</span></li>
-                <li><span class="tech-name">Workflow Documentation</span><span class="tech-tag">Knowledge Base</span></li>
-                <li><span class="tech-name">Incident Resolution</span><span class="tech-tag">98% Rating</span></li>
-                <li><span class="tech-name">Multilingual Training</span><span class="tech-tag">Bilingual AR/EN</span></li>
-              </ul>
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects Section: 3D Holographic Showcase -->
-    <section id="projects" class="section">
-      <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="folder-git-2" class="eyebrow-icon"></i>
-            <span>Featured Case Studies</span>
-          </div>
-          <h2 class="section-title">Built with intent, tested in the real world.</h2>
-          <p class="section-lead">Interactive 3D preview cards exploring real-time networks, gaming protocols, and academic portals.</p>
+        <div class="section-heading-row projects-heading">
+          <h2 class="section-index">02 <span>/</span> Selected work</h2>
+          <span class="projects-rule" aria-hidden="true"></span>
+          <p class="section-lead">Selected work, built around real needs.</p>
         </div>
 
         <div class="projects-grid">
-          <!-- Project 1: TurnUp.io -->
-          <article class="project-3d-card" data-tilt>
-            <div class="project-content">
-              <div class="project-meta-top">
-                <span class="project-tag-pill">Full-Stack Realtime</span>
-                <span class="project-status-dot"><i class="dot-online"></i> Live Repo</span>
-              </div>
-
-              <div class="project-body">
-                <h3 class="project-title">TurnUp.io</h3>
-                <p class="project-desc">
-                  Real-time multiplayer board game engine supporting lobby matchmaking, room synchronization, and interactive gameplay (Ludo, Snakes & Ladders, Uno) over WebSockets.
-                </p>
-                <div class="project-tech-pills">
-                  <span>React 19</span>
-                  <span>TypeScript</span>
-                  <span>Socket.io</span>
-                  <span>Prisma</span>
-                  <span>PostgreSQL</span>
-                </div>
-              </div>
-
-              <div class="project-footer">
-                <a href="https://github.com/Sufyan-Farooq/TurnUp.io" target="_blank" rel="noopener" class="project-link">
-                  <span>Source Code</span>
-                  <i data-lucide="external-link" class="icon-xs"></i>
-                </a>
-                <span class="project-highlight">Multiplayer Engine</span>
-              </div>
+          <article class="project-3d-card project-card project-card--turnup" data-tilt>
+            <a class="project-media project-media--dark" href="https://github.com/Sufyan-Farooq/TurnUp.io" target="_blank" rel="noopener" aria-label="View TurnUp.io source code on GitHub">
+              <img src="assets/plates/turnup-screen.png" alt="TurnUp.io game-night landing page with guest play and sign-in options" width="1386" height="878" loading="lazy" />
+              <span class="media-open" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span>
+            </a>
+            <div class="project-info">
+              <h3 class="project-title">TurnUp.io</h3>
+              <p class="project-desc">Turn any group chat into game night. Ludo, Monopoly, Uno &amp; more.</p>
+              <div class="project-meta-top project-meta-inline"><span class="project-number">01</span><span class="project-tag-pill">Realtime multiplayer</span><span class="project-status-dot"><i class="dot-online"></i> Live repo</span></div>
+              <div class="project-bottom"><div class="project-tech-pills"><span>React</span><span>TypeScript</span><span>Socket.io</span><span>PostgreSQL</span></div><a href="https://github.com/Sufyan-Farooq/TurnUp.io" target="_blank" rel="noopener" class="project-link">View source <i data-lucide="arrow-up-right" class="icon-xs" aria-hidden="true"></i></a></div>
             </div>
           </article>
 
-          <!-- Project 2: Basil Bot -->
-          <article class="project-3d-card" data-tilt>
-            <div class="project-content">
-              <div class="project-meta-top">
-                <span class="project-tag-pill">Application Architecture</span>
-                <span class="project-status-dot"><i class="dot-online"></i> Production Bot</span>
-              </div>
-
-              <div class="project-body">
-                <h3 class="project-title">Basil Bot</h3>
-                <p class="project-desc">
-                  Gamified Discord interactive bot featuring automated team mechanics, dynamic balloon warfare calculations, scheduled cron regeneration, and persistent inventory economics.
-                </p>
-                <div class="project-tech-pills">
-                  <span>Node.js</span>
-                  <span>Discord.js</span>
-                  <span>MongoDB</span>
-                  <span>Mongoose</span>
-                  <span>Node-Cron</span>
-                </div>
-              </div>
-
-              <div class="project-footer">
-                <span class="project-meta-note">Discord Guild Integration</span>
-                <span class="project-highlight">Automated Economy</span>
-              </div>
+          <article class="project-3d-card project-card project-card--mawarith" data-tilt>
+            <a class="project-media project-media--mawarith" href="https://mawarith.sufyanfarooqsmf.workers.dev/" target="_blank" rel="noopener" aria-label="Open the live Mawarith inheritance calculator">
+              <img src="assets/plates/mawarith-screen.png" alt="Mawarith inheritance calculator showing a structured Arabic and English estate calculation interface" width="1159" height="946" loading="lazy" />
+              <span class="media-open" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span>
+            </a>
+            <div class="project-info">
+              <h3 class="project-title">Mawarith <span lang="ar" dir="rtl">مواريث</span></h3>
+              <p class="project-desc">Calculate inheritance shares based on Islamic law.</p>
+              <div class="project-meta-top project-meta-inline"><span class="project-number">02</span><span class="project-tag-pill">Inheritance calculator</span><span class="project-status-dot"><i class="dot-online"></i> Live · beta</span></div>
+              <div class="project-bottom"><div class="project-tech-pills"><span>Arabic UI</span><span>Inheritance shares</span><span>SAR</span></div><a href="https://mawarith.sufyanfarooqsmf.workers.dev/" target="_blank" rel="noopener" class="project-link">Open Mawarith <i data-lucide="arrow-up-right" class="icon-xs" aria-hidden="true"></i></a></div>
             </div>
           </article>
 
-          <!-- Project 3: Dar Al-Hadith Student Portal -->
-          <article class="project-3d-card" data-tilt>
-            <div class="project-content">
-              <div class="project-meta-top">
-                <span class="project-tag-pill">Academic Web Portal</span>
-                <span class="project-status-dot"><i class="dot-online"></i> Deployed</span>
-              </div>
-
-              <div class="project-body">
-                <h3 class="project-title">Dar Al-Hadith Portal</h3>
-                <p class="project-desc">
-                  Institutional academic report card lookup engine equipped with a custom virtual Arabic keyboard, canvas-based certificate image generation, and instant term mark analytics.
-                </p>
-                <div class="project-tech-pills">
-                  <span>HTML5</span>
-                  <span>CSS3</span>
-                  <span>Vanilla JS</span>
-                  <span>HTML2Canvas</span>
-                  <span>Arabic Engine</span>
-                </div>
-              </div>
-
-              <div class="project-footer">
-                <span class="project-meta-note">Student Records Lookup</span>
-                <span class="project-highlight">Canvas Renderer</span>
-              </div>
+          <article class="project-3d-card project-card project-card--omar" data-tilt>
+            <a class="project-media project-media--omar" href="https://omergloballlc.com/" target="_blank" rel="noopener" aria-label="Visit Omar Global LLC website">
+              <img src="assets/omerglobal-preview.png" alt="Omar Global LLC website preview for manpower supply and general contracting" width="1200" height="600" loading="lazy" />
+              <span class="media-open" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span>
+            </a>
+            <div class="project-info">
+              <div class="project-meta-top"><span class="project-number">03</span><span class="project-tag-pill">Business website</span><span class="project-status-dot"><i class="dot-online"></i> Live site</span></div>
+              <h3 class="project-title">Omar Global LLC</h3>
+              <p class="project-desc">A website for a Jeddah-based manpower supply and general contracting business, presenting services and helping clients make an enquiry.</p>
+              <div class="project-bottom"><span class="project-meta-note">Workforce · Contracting · Saudi Arabia</span><a href="https://omergloballlc.com/" target="_blank" rel="noopener" class="project-link">Visit website <i data-lucide="arrow-up-right" class="icon-xs" aria-hidden="true"></i></a></div>
             </div>
           </article>
 
-          <!-- Project 4: AI & Security Sandbox -->
-          <article class="project-3d-card" data-tilt>
-            <div class="project-content">
-              <div class="project-meta-top">
-                <span class="project-tag-pill">R&D / Systems Defense</span>
-                <span class="project-status-dot"><i class="dot-online"></i> Ongoing Lab</span>
-              </div>
-
-              <div class="project-body">
-                <h3 class="project-title">AI & Systems Defense Lab</h3>
-                <p class="project-desc">
-                  Automated security exploration harness leveraging LLMs to conduct static vulnerability scans, analyze codebase posture, and construct automated defense scripts against common CVEs.
-                </p>
-                <div class="project-tech-pills">
-                  <span>LLM Workflows</span>
-                  <span>Bash Scripting</span>
-                  <span>Static Auditing</span>
-                  <span>Penetration Testing</span>
-                </div>
-              </div>
-
-              <div class="project-footer">
-                <span class="project-meta-note">Offensive & Defensive Labs</span>
-                <span class="project-highlight">Hardening & Defense</span>
-              </div>
+          <article class="project-3d-card project-card project-card--naql" data-tilt>
+            <a class="project-media project-media--naql" href="https://naqlapp.com/" target="_blank" rel="noopener" aria-label="Visit NAQL website">
+              <img src="assets/naqlapp-preview.png" alt="NAQL website preview with the brand mark and Transportation Simplified message" width="1200" height="675" loading="lazy" />
+              <span class="media-open" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span>
+            </a>
+            <div class="project-info">
+              <div class="project-meta-top"><span class="project-number">04</span><span class="project-tag-pill">Logistics platform website</span><span class="project-status-dot"><i class="dot-online"></i> Live site</span></div>
+              <h3 class="project-title">NAQL <span lang="ar" dir="rtl">نقل</span></h3>
+              <p class="project-desc">A website for a Saudi freight and customs-clearance platform, explaining how shippers and carriers move a load from booking to delivery.</p>
+              <div class="project-bottom"><span class="project-meta-note">Freight · Carrier marketplace · KSA</span><a href="https://naqlapp.com/" target="_blank" rel="noopener" class="project-link">Visit website <i data-lucide="arrow-up-right" class="icon-xs" aria-hidden="true"></i></a></div>
             </div>
           </article>
+        </div>
+
+        <details class="more-work">
+          <summary><span>More builds and experiments</span><span class="more-work-plus" aria-hidden="true">+</span></summary>
+          <div class="more-work-list">
+            <article><span class="project-number">05</span><div><h3>Basil Bot</h3><p>A Discord game bot with team mechanics, scheduled regeneration, and persistent inventory.</p></div><span class="project-meta-note">Node.js · Discord.js · MongoDB</span></article>
+            <article><span class="project-number">06</span><div><h3>Dar Al-Hadith Portal</h3><p>An academic report-card lookup with a virtual Arabic keyboard, certificate image generation, and term-mark analytics.</p></div><span class="project-meta-note">HTML · CSS · JavaScript</span></article>
+            <article><span class="project-number">07</span><div><h3>AI &amp; Systems Defense Lab</h3><p>Security exploration with codebase reviews, static scans, and automated defensive scripts.</p></div><span class="project-meta-note">LLM workflows · Bash · Security</span></article>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="section-container">
+        <div class="section-heading-row">
+          <p class="section-index">The idea</p>
+          <h2 class="section-title">Useful technology begins with listening.</h2>
+        </div>
+        <div class="about-grid">
+          <p class="about-lead">Good software does more than work. It takes friction out of someone's day.</p>
+          <div class="about-copy">
+            <p>That belief connects my work across software, technical support, and operations. I start with the people and the problem, then build the simplest reliable way forward.</p>
+            <p>At Digival IT Solutions in Jeddah, I support university learning platforms and connect the needs of users, academic teams, and developers. Outside that work, I build tools that make complex tasks feel more straightforward.</p>
+            <div class="language-tags" aria-label="Languages"><span class="lang-tag">English</span><span class="lang-tag">Arabic</span><span class="lang-tag">Urdu</span><span class="lang-tag">Hindi</span></div>
+          </div>
+          <div class="about-aside"><span class="aside-symbol" aria-hidden="true">↘</span><p>Technical depth.<br />Operational perspective.<br /><strong>A human outcome.</strong></p></div>
         </div>
       </div>
     </section>
 
-    <!-- Future Engineering Labs & Upcoming Builds -->
-    <section id="labs" class="section">
+    <section id="skills" class="section approach-section">
       <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="flask-conical" class="eyebrow-icon"></i>
-            <span>Engineering Lab & Roadmap</span>
-          </div>
-          <h2 class="section-title">What I'm building next.</h2>
-          <p class="section-lead">A transparent look at work-in-progress prototypes, technical experiments, and upcoming software.</p>
+        <div class="section-heading-row">
+          <p class="section-index">03 <span>/</span> How I work</p>
+          <h2 class="section-title">Start with the need.<br /><em>Build what helps.</em></h2>
         </div>
-
-        <div class="bento-grid labs-grid">
-          <!-- Upcoming Build 1: Logistics TMS -->
-          <div class="bento-cell lab-cell">
-            <div class="cell-content">
-              <div class="lab-badge"><span class="badge-dot"></span> In Active Development</div>
-              <h3 class="lab-title">Transport Management System (TMS)</h3>
-              <p class="lab-desc">
-                An end-to-end logistics platform engineered for freight and commercial transport companies. Integrates fleet dispatch, consignment manifest generation, driver load assignments, and automated billing.
-              </p>
-              <div class="lab-meta">
-                <span>Stack: React • Node.js • PostgreSQL • Map APIs</span>
-                <span class="lab-eta">Target: 2026</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Upcoming Build 2: Wirasat / Mawarith Calculator -->
-          <div class="bento-cell lab-cell">
-            <div class="cell-content">
-              <div class="lab-badge"><span class="badge-dot"></span> Prototyping Phase</div>
-              <h3 class="lab-title">Wirasat & Mawarith Legal Helper (موارِيث)</h3>
-              <p class="lab-desc">
-                An algorithmic legal calculation engine computing exact Islamic estate inheritance shares (فروض, عصبة, and حجب) with precision fraction mathematics, step-by-step reasoning, and bilingual Arabic/English breakdowns.
-              </p>
-              <div class="lab-meta">
-                <span>Stack: TypeScript • Precise Math Engine • Arabic UI</span>
-                <span class="lab-eta">Target: 2026</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Live Telemetry Tile (Flattened layout, no nested card boxes) -->
-          <div class="bento-cell bento-2x1 lab-telemetry-cell">
-            <div class="cell-content">
-              <div class="telemetry-header">
-                <i data-lucide="activity" class="cell-icon"></i>
-                <div>
-                  <h4 class="telemetry-title">Live Edge Connection Telemetry</h4>
-                  <p class="telemetry-subtitle">Measuring your round-trip latency to this server node</p>
-                </div>
-              </div>
-
-              <div class="telemetry-display-row">
-                <div class="telemetry-stat-flat">
-                  <span class="telemetry-num" id="live-ping-num">--</span>
-                  <span class="telemetry-unit">ms</span>
-                  <span class="telemetry-stat-label">Live RTT Latency</span>
-                </div>
-                <div class="telemetry-stat-flat">
-                  <span class="telemetry-num" id="local-time-num">--:--</span>
-                  <span class="telemetry-unit">AST</span>
-                  <span class="telemetry-stat-label">Jeddah Local Time (UTC+3)</span>
-                </div>
-                <div class="telemetry-stat-flat">
-                  <span class="telemetry-num" id="http-status-num">HTTP/2</span>
-                  <span class="telemetry-unit">TLS 1.3</span>
-                  <span class="telemetry-stat-label">Connection Protocol</span>
-                </div>
-              </div>
-            </span>
-          </div>
+        <div class="approach-grid">
+          <article class="approach-step"><span class="approach-count">01</span><h3>Understand the day-to-day</h3><p>Listen to the people doing the work. Find where a handoff, system, or repeated task is slowing them down.</p></article>
+          <article class="approach-step"><span class="approach-count">02</span><h3>Make the problem concrete</h3><p>Map the workflow, constraints, and decisions so the right solution is clear before the build gets complicated.</p></article>
+          <article class="approach-step"><span class="approach-count">03</span><h3>Build for real use</h3><p>Ship dependable software, explain it clearly, and support people as it becomes part of how they work.</p></article>
+        </div>
+        <div class="stack-ledger">
+          <div class="stack-ledger-heading"><h3>Tools I reach for</h3><p>Chosen for the problem at hand.</p></div>
+          <dl class="stack-groups">
+            <div><dt>Product &amp; interface</dt><dd>React · Next.js · TypeScript · HTML · CSS · Three.js</dd></div>
+            <div><dt>Data &amp; realtime</dt><dd>Node.js · Express · WebSockets · PostgreSQL · MongoDB</dd></div>
+            <div><dt>Systems &amp; delivery</dt><dd>Docker · AWS · Linux · GitHub Actions · API diagnostics</dd></div>
+            <div><dt>People &amp; operations</dt><dd>LMS support · UAT · stakeholder coordination · documentation</dd></div>
+          </dl>
         </div>
       </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="section">
+    <section id="labs" class="section labs-section">
       <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="briefcase" class="eyebrow-icon"></i>
-            <span>Career Path</span>
-          </div>
-          <h2 class="section-title">Work Experience & Impact.</h2>
-          <p class="section-lead">Delivering measurable reliability and operational excellence across university and enterprise platforms.</p>
+        <div class="section-heading-row">
+          <p class="section-index">04 <span>/</span> In progress</p>
+          <h2 class="section-title">Still curious.<br /><em>Still building.</em></h2>
         </div>
-
-        <div class="experience-timeline">
-          <!-- Role 1 -->
-          <div class="timeline-entry">
-            <div class="timeline-indicator">
-              <div class="timeline-dot-core"></div>
-            </div>
-            <div class="timeline-card">
-              <div class="timeline-header-meta">
-                <span class="timeline-date">2023 – Present</span>
-                <span class="timeline-badge">Primary Role</span>
-              </div>
-              <h3 class="timeline-role">Senior Onsite Support Engineer</h3>
-              <h4 class="timeline-company">Digival IT Solutions — Jeddah, Saudi Arabia</h4>
-              <p class="timeline-desc">
-                Core onsite systems engineer providing high-availability technical support and operational leadership for university Learning Management Systems (LMS) serving over 2,000 active faculty and student users.
-              </p>
-              <div class="timeline-achievements">
-                <div class="achievement-pill">
-                  <i data-lucide="trending-down" class="achieve-icon"></i>
-                  <span>Cut ticket response times by <strong>30%</strong></span>
-                </div>
-                <div class="achievement-pill">
-                  <i data-lucide="book-open" class="achieve-icon"></i>
-                  <span>Authored technical KB reducing repeat issues by <strong>30%</strong></span>
-                </div>
-                <div class="achievement-pill">
-                  <i data-lucide="check-circle-2" class="achieve-icon"></i>
-                  <span>Maintained sustained <strong>98%</strong> client satisfaction rating</span>
-                </div>
-                <div class="achievement-pill">
-                  <i data-lucide="bug" class="achieve-icon"></i>
-                  <span>Triaged and coordinated resolution for <strong>50+</strong> enterprise bug escalations</span>
-                </div>
-              </div>
-              <div class="timeline-tags">
-                <span>Enterprise LMS</span>
-                <span>UAT Testing</span>
-                <span>API Diagnostics</span>
-                <span>Incident Response</span>
-                <span>User Training</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Role 2 -->
-          <div class="timeline-entry">
-            <div class="timeline-indicator">
-              <div class="timeline-dot-core"></div>
-            </div>
-            <div class="timeline-card">
-              <div class="timeline-header-meta">
-                <span class="timeline-date">2023 – Present</span>
-                <span class="timeline-badge">Coordinated Role</span>
-              </div>
-              <h3 class="timeline-role">Client Relations & Operations Coordinator</h3>
-              <h4 class="timeline-company">Digival IT Solutions — Jeddah, Saudi Arabia</h4>
-              <p class="timeline-desc">
-                Serving as the primary communication bridge between academic department heads, executive stakeholders, and remote development teams to align delivery milestones and optimize platform workflows.
-              </p>
-              <div class="timeline-achievements">
-                <div class="achievement-pill">
-                  <i data-lucide="message-square" class="achieve-icon"></i>
-                  <span>Streamlined stakeholder communications by <strong>30%</strong></span>
-                </div>
-                <div class="achievement-pill">
-                  <i data-lucide="file-text" class="achieve-icon"></i>
-                  <span>Engineered comprehensive onboarding documentation</span>
-                </div>
-                <div class="achievement-pill">
-                  <i data-lucide="git-merge" class="achieve-icon"></i>
-                  <span>Mapped business logic to software requirements for engineering sprints</span>
-                </div>
-              </div>
-              <div class="timeline-tags">
-                <span>Cross-Team Operations</span>
-                <span>Process Optimization</span>
-                <span>Executive Reporting</span>
-                <span>Bilingual Communication</span>
-              </div>
-            </span>
-          </div>
+        <div class="labs-list">
+          <article class="lab-row"><span class="lab-badge"><span class="badge-dot"></span>In development</span><div><h3 class="lab-title">Transport Management System</h3><p class="lab-desc">A logistics platform in development for freight and commercial transport operations, including dispatch, consignment manifests, driver assignments, and billing.</p></div><span class="lab-stack">React · Node.js · PostgreSQL</span></article>
         </div>
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section">
+    <section id="experience" class="section experience-section">
       <div class="section-container">
-        <div class="section-header">
-          <div class="section-eyebrow">
-            <i data-lucide="send" class="eyebrow-icon"></i>
-            <span>Initiate Contact</span>
-          </div>
-          <h2 class="section-title">Let's build something exceptional.</h2>
-          <p class="section-lead">Whether you have an upcoming project, a challenging technical problem, or an opportunity in systems development, my inbox is open.</p>
+        <div class="section-heading-row">
+          <p class="section-index">05 <span>/</span> Experience</p>
+          <h2 class="section-title">Support work taught me<br /><em>to see the whole system.</em></h2>
         </div>
+        <div class="timeline">
+          <article class="timeline-entry">
+            <div class="timeline-date">2023 — Present</div>
+            <div class="timeline-body"><h3 class="timeline-role">Senior Onsite Support Engineer</h3><p class="timeline-company">Digival IT Solutions <span>·</span> Jeddah, Saudi Arabia</p><p class="timeline-desc">Supporting university learning-management systems for more than 2,000 daily users. I troubleshoot platform and API issues, coordinate escalations, guide UAT, and train users.</p><ul class="timeline-highlights"><li>Maintained a 98% client satisfaction rating.</li><li>Triaged and coordinated 50+ enterprise bug escalations.</li></ul><div class="timeline-tags"><span>Enterprise LMS</span><span>API diagnostics</span><span>Incident response</span><span>User training</span></div></div>
+          </article>
+          <article class="timeline-entry">
+            <div class="timeline-date">2023 — Present</div>
+            <div class="timeline-body"><h3 class="timeline-role">Client Relations &amp; Operations Coordinator</h3><p class="timeline-company">Digival IT Solutions <span>·</span> Jeddah, Saudi Arabia</p><p class="timeline-desc">Connecting academic teams, executive stakeholders, and developers so platform work reflects real needs and delivery stays aligned.</p><ul class="timeline-highlights"><li>Streamlined stakeholder communications by 30%.</li><li>Created onboarding documentation and translated business workflows into development requirements.</li></ul><div class="timeline-tags"><span>Cross-team operations</span><span>Process improvement</span><span>Bilingual communication</span></div></div>
+          </article>
+        </div>
+        <div class="education-note"><span class="project-number">NEXT</span><p><strong>MBA in progress</strong> · Executive leadership and operations, expected 2027 <span> / </span> <strong>B.Sc. Computer Science</strong> · Pioneer College, Osmania University</p></div>
+      </div>
+    </section>
 
+    <section id="contact" class="section contact-section">
+      <div class="section-container">
+        <div class="contact-topline"><p class="section-index">06 <span>/</span> Start a conversation</p><span class="contact-location"><span class="status-dot-static"></span> Jeddah, Saudi Arabia · <span id="hero-clock">UTC+3</span></span></div>
+        <div class="contact-heading"><h2 class="section-title">Have a real problem<br />worth making <em>easier?</em></h2><p class="section-lead">Tell me what your team is working through. We can start with the problem and find the useful next step.</p></div>
         <div class="contact-layout">
-          <!-- Contact Info Cards -->
           <div class="contact-info-col">
-            <div class="contact-channel-item">
-              <div class="channel-icon-wrap">
-                <i data-lucide="mail" class="channel-icon"></i>
-              </div>
-              <div class="channel-content">
-                <span class="channel-label">Direct Email</span>
-                <a href="mailto:sufyanfarooqsmf@gmail.com" class="channel-value">sufyanfarooqsmf@gmail.com</a>
-              </div>
-            </div>
-
-            <div class="contact-channel-item">
-              <div class="channel-icon-wrap">
-                <i data-lucide="phone" class="channel-icon"></i>
-              </div>
-              <div class="channel-content">
-                <span class="channel-label">Mobile / WhatsApp</span>
-                <a href="tel:+966544882306" class="channel-value">+966 54 488 2306</a>
-              </div>
-            </div>
-
-            <div class="contact-channel-item">
-              <div class="channel-icon-wrap">
-                <i data-lucide="map-pin" class="channel-icon"></i>
-              </div>
-              <div class="channel-content">
-                <span class="channel-label">Location</span>
-                <span class="channel-value">Jeddah, Western Province, Saudi Arabia</span>
-              </div>
-            </div>
-
-            <div class="contact-social-row">
-              <a href="https://github.com/Sufyan-Farooq" target="_blank" rel="noopener" class="social-btn" aria-label="Sufyan on GitHub">
-                <i data-lucide="github"></i>
-                <span>GitHub</span>
-              </a>
-              <a href="https://www.linkedin.com/in/sufyan-farooq-077bbb264/" target="_blank" rel="noopener" class="social-btn" aria-label="Sufyan on LinkedIn">
-                <i data-lucide="linkedin"></i>
-                <span>LinkedIn</span>
-              </a>
-              <button class="social-btn" id="copy-email-btn" aria-label="Copy Email to Clipboard">
-                <i data-lucide="copy"></i>
-                <span id="copy-btn-text">Copy Email</span>
-              </button>
-            </div>
+            <a href="mailto:sufyanfarooqsmf@gmail.com" class="contact-channel-item"><span class="channel-label">Email</span><span class="channel-value">sufyanfarooqsmf@gmail.com</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+            <a href="tel:+966544882306" class="contact-channel-item"><span class="channel-label">Phone / WhatsApp</span><span class="channel-value">+966 54 488 2306</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+            <div class="contact-social-row"><a href="https://github.com/Sufyan-Farooq" target="_blank" rel="noopener" class="social-btn"><i data-lucide="github" aria-hidden="true"></i><span>GitHub</span></a><a href="https://www.linkedin.com/in/sufyan-farooq-077bbb264/" target="_blank" rel="noopener" class="social-btn"><i data-lucide="linkedin" aria-hidden="true"></i><span>LinkedIn</span></a><button class="social-btn" id="copy-email-btn" aria-label="Copy email address"><i data-lucide="copy" aria-hidden="true"></i><span id="copy-btn-text">Copy email</span></button></div>
           </div>
-
-          <!-- Contact Form -->
           <div class="contact-form-col">
             <form id="contact-form" action="https://formspree.io/f/maqvoanj" method="POST" class="contact-form-box">
-              <div class="form-header">
-                <h3 class="form-title">Send a Message</h3>
-                <span class="form-badge">Direct Route</span>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="name" class="form-label">Your Name</label>
-                  <input type="text" id="name" name="name" class="form-input" placeholder="e.g. Alex Mercer" required />
-                </div>
-                <div class="form-group">
-                  <label for="email" class="form-label">Your Email</label>
-                  <input type="email" id="email" name="email" class="form-input" placeholder="e.g. alex@company.com" required />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="subject" class="form-label">Subject</label>
-                <input type="text" id="subject" name="subject" class="form-input" placeholder="Project collaboration, hiring, or inquiry" required />
-              </div>
-
-              <div class="form-group">
-                <label for="message" class="form-label">Message</label>
-                <textarea id="message" name="message" rows="5" class="form-input form-textarea" placeholder="Tell me about what you're building..." required></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
-                <span>Send Message</span>
-                <i data-lucide="arrow-right" class="icon-sm"></i>
-              </button>
+              <div class="form-header"><h3 class="form-title">Send a message</h3><span class="form-badge">A little context is a good start</span></div>
+              <div class="form-row"><div class="form-group"><label for="name" class="form-label">Your name</label><input type="text" id="name" name="name" class="form-input" autocomplete="name" placeholder="Your name" required /></div><div class="form-group"><label for="email" class="form-label">Your email</label><input type="email" id="email" name="email" class="form-input" autocomplete="email" placeholder="you@example.com" required /></div></div>
+              <div class="form-group"><label for="subject" class="form-label">Subject</label><input type="text" id="subject" name="subject" class="form-input" placeholder="What would you like to work through?" required /></div>
+              <div class="form-group"><label for="message" class="form-label">Message</label><textarea id="message" name="message" rows="5" class="form-input form-textarea" placeholder="A little context is a good place to start." required></textarea></div>
+              <button type="submit" class="btn btn-primary btn-block" id="submit-btn"><span>Send message</span><i data-lucide="arrow-up-right" class="icon-sm" aria-hidden="true"></i></button>
               <div class="form-status" id="form-status" aria-live="polite"></div>
             </form>
           </div>
@@ -750,64 +244,10 @@
     </section>
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-brand-row">
-        <a href="#hero" class="footer-brand">
-          <img src="assets/logo-64.webp" alt="SF Logo" class="brand-logo-img" width="34" height="34" />
-          <span>Sufyan Mohammed Farooq</span>
-        </a>
-        <p class="footer-tagline">
-          Crafted with Three.js, clean semantics, and modern design engineering.
-        </p>
-      </div>
+  <footer class="site-footer"><div class="footer-container"><a href="#hero" class="footer-brand"><img src="assets/logo-64.webp" alt="" class="brand-logo-img" width="32" height="32" /><span>Sufyan Mohammed Farooq</span></a><p class="footer-tagline">Technology for business needs and the people behind them.</p><div class="footer-bottom-row"><p class="footer-copy">© 2026 Sufyan Mohammed Farooq</p><div class="footer-nav"><a href="#projects">Work</a><a href="#experience">Experience</a><a href="#contact">Contact</a><button type="button" class="footer-quick-action" id="cmdk-trigger-btn" aria-label="Open quick actions"><i data-lucide="command" class="icon-xs" aria-hidden="true"></i> Quick actions</button><span class="footer-time" id="local-time-num">Jeddah, UTC+3</span></div></div></div></footer>
 
-      <div class="footer-divider"></div>
-
-      <div class="footer-bottom-row">
-        <p class="footer-copy">
-          &copy; 2026 Sufyan Mohammed Farooq. All rights reserved.
-        </p>
-        <div class="footer-nav">
-          <a href="#about">About</a>
-          <a href="#skills">Stack</a>
-          <a href="#projects">Projects</a>
-          <a href="#labs">Labs</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Quick Command Palette (⌘K) Dialog Modal -->
-  <div class="cmdk-overlay" id="cmdk-modal" hidden aria-hidden="true">
-    <div class="cmdk-dialog" role="dialog" aria-modal="true" aria-label="Navigation Command Palette">
-      <div class="cmdk-header">
-        <i data-lucide="search" class="cmdk-search-icon"></i>
-        <input type="text" id="cmdk-input" class="cmdk-input" placeholder="Type a command or navigate sections..." autocomplete="off" spellcheck="false" />
-        <kbd class="cmdk-esc-kbd" id="cmdk-close-btn">ESC</kbd>
-      </div>
-      <div class="cmdk-list" id="cmdk-list" role="listbox">
-        <!-- Rendered dynamically by script.js -->
-      </div>
-      <div class="cmdk-footer">
-        <span>Use <kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
-        <span><kbd>↵</kbd> to select</span>
-        <span><kbd>ESC</kbd> to exit</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Three.js (r128 lightweight) from reliable CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-  <!-- Lucide Icons -->
+  <div class="cmdk-overlay" id="cmdk-modal" hidden aria-hidden="true"><div class="cmdk-dialog" role="dialog" aria-modal="true" aria-label="Portfolio quick actions"><div class="cmdk-header"><i data-lucide="search" class="cmdk-search-icon" aria-hidden="true"></i><input type="text" id="cmdk-input" class="cmdk-input" placeholder="Jump to a project or section…" autocomplete="off" spellcheck="false" /><button class="cmdk-esc-kbd" id="cmdk-close-btn" aria-label="Close command palette">ESC</button></div><div class="cmdk-list" id="cmdk-list" role="listbox"></div><div class="cmdk-footer"><span>Use <kbd>↑</kbd> <kbd>↓</kbd> to move</span><span><kbd>↵</kbd> to select</span><span><kbd>ESC</kbd> to close</span></div></div></div>
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Main JavaScript Application -->
   <script src="script.js"></script>
 </body>
-
 </html>
