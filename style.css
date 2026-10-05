@@ -84,6 +84,9 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.0
 .hero-headline em, .section-title em { color: var(--accent); font-style: normal; }
 .hero-subline { max-width: 900px; margin-top: 0; color: var(--ink-soft); font-size: clamp(1.1rem, 1.6vw, 1.5rem); line-height: 1.55; }
 .hero-subline strong { color: var(--ink); font-weight: 800; }
+.work-availability { display: flex; align-items: center; gap: 10px; margin-top: 22px; color: var(--accent-dark); font-size: .95rem; }
+.availability-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.work-details { max-width: 65ch; margin-top: 7px; color: var(--muted); font-size: .82rem; line-height: 1.7; }
 .hero-cta-group { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; margin-top: 19px; }
 .hero-cta-group .btn { min-height: 52px; padding: 0 28px; border-radius: 10px; font-size: 1rem; }
 .hero-cta-group .btn-secondary { border-color: #7f9bc3; background: rgba(255,255,255,.24); }
@@ -149,6 +152,9 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.0
 .project-media--mawarith img { object-fit: contain; object-position: center; }
 .project-media--omar { background: #03182c; }
 .project-media--naql { background: #f1efeb; }
+.project-media--riyasat { background: #173d31; }
+.project-media--riyasat img { object-fit: contain; }
+.project-actions { display: flex; flex-wrap: wrap; gap: 18px; }
 .media-open { position: absolute; right: 12px; bottom: 12px; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(255,255,255,.45); background: rgba(20,32,39,.76); color: white; opacity: 0; transform: translateY(5px); transition: opacity .25s ease, transform .25s ease; }
 .project-card:hover .media-open, .project-media:focus-visible .media-open { opacity: 1; transform: translateY(0); }
 .media-open svg { width: 17px; height: 17px; }
@@ -178,6 +184,8 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.0
 .more-work[open] .more-work-plus { transform: rotate(45deg); }
 .more-work-list article { display: grid; grid-template-columns: 55px minmax(0, 1fr) minmax(160px, .5fr); gap: 16px; align-items: start; padding: 20px 0; border-top: 1px solid var(--line); }
 .more-work-list h3 { font-size: 1.18rem; }
+.more-work-list h3 a { text-decoration: underline; text-decoration-color: var(--line); }
+.more-work-list h3 a:hover { color: var(--accent-dark); }
 .more-work-list p { max-width: 590px; margin-top: 6px; color: var(--muted); font-size: .72rem; line-height: 1.7; }
 
 /* Approach & technical inventory */

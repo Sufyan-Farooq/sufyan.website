@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Visitors to Sufyan's personal portfolio. Likely prospective employers, clients, and collaborators, inferred from the existing experience, projects, and contact paths; their priority order is undecided.
+Visitors to Sufyan's personal portfolio: prospective employers are the current priority, alongside clients and collaborators.
 
 ## Product Purpose
 
@@ -16,7 +16,7 @@ Present Sufyan Mohammed Farooq as a builder who uses technology to solve busines
 
 ## Positioning
 
-Undecided. Do not add claims beyond the supplied portfolio content.
+Developer and Senior Onsite Support Engineer open to full-time opportunities. Distinguish professional support experience, software projects, paid client work, and DevOps coursework and practice. Do not add claims beyond the confirmed experience and project source.
 
 ## Capabilities and Constraints
 
@@ -40,5 +40,6 @@ Portfolio copy and existing project details are in `index.html`; identity assets
 
 ## Open Decisions
 
-- The priority order among prospective employers, clients, and collaborators is undecided.
-- The user's exact role and scope on each client website is not specified; describe only the work they confirm they did.
+- Employment is the current priority. Show immediate availability, transferable iqama, Jeddah location, and relocation flexibility.
+- Feature Riyasat first and move TurnUp.io into personal projects. Omer Global LLC is the one confirmed paid client project.
+- Education is BCA, with MBA in progress in the final year. Professional DevOps employment is not claimed.
