@@ -279,6 +279,7 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.0
 .footer-quick-action { display: inline-flex; align-items: center; gap: 6px; border: 0; padding: 0; background: transparent; color: inherit; font-size: .72rem; cursor: pointer; }
 .footer-quick-action:hover { color: var(--paper-light); }
 .footer-time { text-transform: none; letter-spacing: 0; }
+.footer-visit-count { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* Command palette */
 .cmdk-overlay { position: fixed; z-index: 300; inset: 0; display: grid; place-items: start center; padding: min(18vh, 150px) 20px 20px; background: rgba(12,22,29,.64); }

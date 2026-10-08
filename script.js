@@ -563,10 +563,23 @@
     });
   }
 
-  // ---------- 9. Record Silent Visitor Analytics ----------
-  function recordVisit() {
+  // ---------- 9. Visitor Analytics & Footer Count ----------
+  async function recordVisit() {
     try {
-      fetch('/api/visit', { method: 'POST' }).catch(() => {});
+      await fetch('/api/visit', { method: 'POST', signal: AbortSignal.timeout(8000) });
+    } catch (e) {}
+
+    const visitCount = document.getElementById('footer-visit-count');
+    if (!visitCount) return;
+
+    try {
+      const response = await fetch('/api/stats', { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      if (!response.ok) return;
+      const { totalVisits } = await response.json();
+      if (!Number.isSafeInteger(totalVisits) || totalVisits < 0) return;
+
+      visitCount.textContent = `${totalVisits.toLocaleString()} ${totalVisits === 1 ? 'visit' : 'visits'}`;
+      visitCount.hidden = false;
     } catch (e) {}
   }
 
