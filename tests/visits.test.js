@@ -6,6 +6,23 @@ const path = require('node:path');
 const net = require('node:net');
 const { spawn } = require('node:child_process');
 const { once } = require('node:events');
+const vm = require('node:vm');
+
+test('footer displays unique visitors rather than total visits', async () => {
+  const source = fs.readFileSync(path.join(__dirname, '..', 'script.js'), 'utf8');
+  const code = source.slice(source.indexOf('  async function recordVisit()'), source.indexOf('  // ---------- DOM Ready Bootstrapper'));
+  for (const [totalUnique, expected] of [[2, '2 unique visitors'], [1, '1 unique visitor'], [0, '0 unique visitors'], [undefined, null]]) {
+    const counter = { hidden: true, textContent: '' };
+    const context = vm.createContext({
+      AbortSignal,
+      document: { getElementById: () => counter },
+      fetch: async () => ({ ok: true, json: async () => ({ totalVisits: 99, totalUnique }) }),
+    });
+    await vm.runInContext(code + '\nrecordVisit()', context);
+    assert.equal(counter.hidden, expected === null);
+    assert.equal(counter.textContent, expected ?? '');
+  }
+});
 
 test('stats exposes the saved total and records visits without losing history', async (t) => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portfolio-ci-'));
@@ -50,4 +67,8 @@ test('stats exposes the saved total and records visits without losing history', 
   const stored = JSON.parse(fs.readFileSync(path.join(directory, 'stats.json'), 'utf8'));
   assert.equal(stored.totalVisits, 42);
   assert.ok(stored.uniqueHashes.includes('existing-hash'));
+  await fetch(`${base}/api/visit`, { method: 'POST', headers: { 'X-Forwarded-For': '127.0.0.1' } });
+  const repeat = await (await fetch(`${base}/api/stats`)).json();
+  assert.equal(repeat.totalVisits, 43);
+  assert.equal(repeat.totalUnique, 2);
 });

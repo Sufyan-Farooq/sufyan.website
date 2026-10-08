@@ -575,10 +575,10 @@
     try {
       const response = await fetch('/api/stats', { cache: 'no-store', signal: AbortSignal.timeout(8000) });
       if (!response.ok) return;
-      const { totalVisits } = await response.json();
-      if (!Number.isSafeInteger(totalVisits) || totalVisits < 0) return;
+      const { totalUnique } = await response.json();
+      if (!Number.isSafeInteger(totalUnique) || totalUnique < 0) return;
 
-      visitCount.textContent = `${totalVisits.toLocaleString()} ${totalVisits === 1 ? 'visit' : 'visits'}`;
+      visitCount.textContent = `${totalUnique.toLocaleString()} unique ${totalUnique === 1 ? 'visitor' : 'visitors'}`;
       visitCount.hidden = false;
     } catch (e) {}
   }
