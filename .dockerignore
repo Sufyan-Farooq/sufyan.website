@@ -1,0 +1,10 @@
+.git
+.github
+.env
+data
+stats.json
+node_modules
+*.before-*
+.agent
+.impeccable
+tests

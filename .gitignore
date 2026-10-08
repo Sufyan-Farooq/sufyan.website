@@ -1,6 +1,8 @@
 node_modules/
 stats.json
-package-lock.json
+.env
+data/
+*.before-*
 .system_generated/
 .gemini/
 # Local Impeccable review artifacts; keep the design-system sidecar versioned.

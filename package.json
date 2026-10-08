@@ -4,7 +4,9 @@
   "description": "Sufyan Mohammed Farooq - Developer Portfolio & Systems Showcase",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "check": "node --check server.js && node --check script.js",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^4.19.2"

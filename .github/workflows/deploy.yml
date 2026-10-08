@@ -1,0 +1,58 @@
+name: Check and deploy portfolio
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: bash -n ops/deploy-oracle.sh
+      - run: docker build --tag portfolio-ci .
+  deploy:
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: portfolio-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://sufyanfarooq.com
+    steps:
+      - name: Deploy verified commit to Oracle
+        env:
+          DEPLOY_KEY: ${{ secrets.ORACLE_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.ORACLE_KNOWN_HOSTS }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/portfolio_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/portfolio_key ~/.ssh/known_hosts
+          trap 'rm -f ~/.ssh/portfolio_key' EXIT
+          ssh -i ~/.ssh/portfolio_key -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+            ubuntu@84.13.143.155 "deploy $DEPLOY_SHA"
+      - name: Verify public site and stats
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-all-errors --max-time 15 \
+            https://sufyanfarooq.com/ | grep -q 'id="footer-visit-count"'
+          curl --fail --silent --show-error --retry 5 --retry-all-errors --max-time 15 \
+            https://sufyanfarooq.com/api/stats | python3 -c \
+            'import json,sys; n=json.load(sys.stdin)["totalVisits"]; assert type(n) is int and n >= 0; print("Live visits:",n)'

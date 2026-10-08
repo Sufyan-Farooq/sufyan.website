@@ -1,0 +1,17 @@
+name: portfolio
+services:
+  portfolio:
+    build: .
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      PORT: 3000
+      VISIT_SALT: ${VISIT_SALT:?Set VISIT_SALT in the server .env}
+    volumes:
+      - type: bind
+        source: ./data/stats.json
+        target: /app/stats.json
+        bind:
+          create_host_path: false
